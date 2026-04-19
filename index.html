@@ -1,1624 +1,1171 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="htmlRoot">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wholeness — Life Tracker | Team21 Academy</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Practical | Team21 Academy – Connecting People to Resources</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Google Translate -->
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'en',
+      includedLanguages: 'fr,es,pt,ar,de,zh-CN',
+      autoDisplay: false
+    }, 'google_translate_element');
+  }
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 <style>
-  :root {
-    --bg: #0d0f14;
-    --surface: #13161e;
-    --surface2: #1a1e2a;
-    --border: #252a38;
-    --text: #e8eaf0;
-    --muted: #6b7280;
-    --accent-spirit: #c084fc;
-    --accent-family: #f472b6;
-    --accent-finance: #34d399;
-    --accent-physical: #60a5fa;
-    --accent-edu: #fbbf24;
-    --accent-pro: #f97316;
-    --accent-social: #e879f9;
-    --gold: #d4a853;
-    --radius: 16px;
-    --radius-sm: 10px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+:root {
+  --green:#00ff7f;--green-dark:#00c060;--green-glow:rgba(0,255,127,0.3);
+  --black:#050a0e;--dark:#0a1520;--dark2:#0f1f30;
+  --white:#f0f8ff;--gray:#8ab4cc;--blue:#1a6ebd;--orange:#ff6b35;--navy:#071525;
+  --font-display:'Orbitron',monospace;--font-body:'Exo 2',sans-serif;--font-ui:'Rajdhani',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--dark);}::-webkit-scrollbar-thumb{background:var(--green);border-radius:3px;}
 
-  #splash {
-    position: fixed; inset: 0; z-index: 1000;
-    background: var(--bg);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 24px; padding: 24px; text-align: center;
-  }
-  .splash-logo { font-family: 'Playfair Display', serif; font-size: 52px; color: var(--gold); letter-spacing: -1px; }
-  .splash-sub { font-size: 15px; color: var(--muted); max-width: 320px; line-height: 1.6; }
-  .splash-credit { font-size: 12px; color: var(--muted); margin-top: 8px; }
-  .splash-form { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 340px; margin-top: 8px; }
-  .splash-form input {
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: var(--radius-sm); padding: 14px 16px;
-    color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px;
-    outline: none; transition: border-color .2s;
-  }
-  .splash-form input:focus { border-color: var(--gold); }
-  .btn-primary {
-    background: var(--gold); color: #0d0f14; font-weight: 600; font-size: 15px;
-    border: none; border-radius: var(--radius-sm); padding: 14px 24px;
-    cursor: pointer; transition: opacity .2s; font-family: 'DM Sans', sans-serif;
-  }
-  .btn-primary:hover { opacity: .85; }
-  .orb {
-    position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; opacity: .18;
-  }
-  .orb1 { width: 400px; height: 400px; background: var(--accent-spirit); top: -100px; left: -100px; }
-  .orb2 { width: 350px; height: 350px; background: var(--accent-finance); bottom: -80px; right: -80px; }
+/* ── CIRCUIT BG ── */
+.circuit-bg{position:fixed;inset:0;z-index:-1;
+  background:radial-gradient(ellipse at 20% 50%,rgba(0,200,100,0.05) 0%,transparent 60%),
+  radial-gradient(ellipse at 80% 20%,rgba(26,110,189,0.08) 0%,transparent 50%),var(--black);overflow:hidden;}
+.circuit-bg::before{content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(0,255,127,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,127,0.04) 1px,transparent 1px);
+  background-size:60px 60px;animation:gridPulse 8s ease-in-out infinite;}
+@keyframes gridPulse{0%,100%{opacity:.5}50%{opacity:1}}
 
-  #app { display: none; }
-  header {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(13,15,20,.92); backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 20px; display: flex; align-items: center; gap: 16px; height: 60px;
-    justify-content: space-between;
-  }
-  .header-left { display: flex; align-items: center; gap: 16px; }
-  .header-logo { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--gold); }
-  .header-info { display: flex; gap: 20px; }
-  .header-user { font-size: 13px; color: var(--muted); }
-  .header-date { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
-  .header-btn { cursor: pointer; color: var(--muted); font-size: 12px; transition: all .2s; }
-  .header-btn:hover { color: var(--gold); }
+/* ── TRANSLATE BAR ── */
+#google_translate_element{display:none;}
+.goog-te-banner-frame{display:none!important;}
+body{top:0!important;}
+.translate-bar{
+  position:fixed;top:0;left:0;right:0;z-index:2000;
+  background:rgba(0,10,5,0.97);border-bottom:1px solid rgba(0,255,127,0.25);
+  padding:.6rem 2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
+  transform:translateY(-100%);transition:.35s cubic-bezier(.4,0,.2,1);
+}
+.translate-bar.open{transform:translateY(0);}
+.translate-bar-title{font-family:var(--font-ui);font-size:.8rem;letter-spacing:2px;color:var(--gray);text-transform:uppercase;margin-right:.5rem;}
+.lang-btn{
+  padding:.4rem 1rem;border-radius:50px;border:1px solid rgba(0,255,127,0.25);
+  background:transparent;color:var(--gray);font-family:var(--font-ui);font-size:.85rem;
+  cursor:pointer;transition:.2s;letter-spacing:.5px;
+}
+.lang-btn:hover,.lang-btn.active{background:rgba(0,255,127,0.12);color:var(--green);border-color:var(--green);}
+.lang-close{margin-left:auto;background:transparent;border:none;color:var(--gray);font-size:1.2rem;cursor:pointer;padding:.2rem .5rem;transition:.2s;}
+.lang-close:hover{color:var(--white);}
+.pidgin-note{font-size:.78rem;color:var(--orange);font-family:var(--font-ui);padding:.3rem .8rem;border-radius:50px;border:1px solid rgba(255,107,53,0.3);background:rgba(255,107,53,0.08);}
 
-  nav {
-    display: flex; overflow-x: auto; gap: 6px; padding: 12px 16px;
-    border-bottom: 1px solid var(--border); scrollbar-width: none;
-    background: var(--surface);
-  }
-  nav::-webkit-scrollbar { display: none; }
-  .nav-btn {
-    display: flex; flex-direction: column; align-items: center; gap: 3px;
-    padding: 8px 14px; border-radius: var(--radius-sm);
-    border: 1px solid transparent; background: none;
-    color: var(--muted); cursor: pointer; transition: all .2s;
-    white-space: nowrap; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500;
-    min-width: 68px;
-  }
-  .nav-btn .icon { font-size: 20px; }
-  .nav-btn.active { background: var(--surface2); border-color: var(--border); color: var(--text); }
-  .nav-btn.active .icon { filter: drop-shadow(0 0 6px currentColor); }
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;width:100%;z-index:1000;
+  background:rgba(5,10,14,0.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(0,255,127,0.18);
+  padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:70px;
+  transition:top .35s cubic-bezier(.4,0,.2,1);
+}
+nav.shifted{top:46px;}
+.nav-logo{display:flex;align-items:center;gap:12px;font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--green);text-decoration:none;letter-spacing:2px;}
+.logo-icon{width:42px;height:42px;background:linear-gradient(135deg,var(--dark2),var(--navy));border:1px solid var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 15px var(--green-glow);font-family:var(--font-display);font-size:.45rem;font-weight:900;color:var(--green);letter-spacing:1px;}
+.nav-links-wrap{display:flex;align-items:center;gap:2rem;}
+.nav-links{display:flex;align-items:center;gap:1.8rem;list-style:none;}
+.nav-links a{color:var(--gray);font-family:var(--font-ui);font-size:.88rem;font-weight:500;text-decoration:none;letter-spacing:1px;text-transform:uppercase;transition:.25s;border-bottom:1px solid transparent;padding:.2rem 0;}
+.nav-links a:hover{color:var(--green);border-color:var(--green);}
+.translate-btn{display:flex;align-items:center;gap:6px;background:rgba(0,255,127,0.1);border:1px solid rgba(0,255,127,0.3);color:var(--green);padding:.45rem .9rem;border-radius:6px;font-family:var(--font-ui);font-size:.82rem;font-weight:600;letter-spacing:1px;cursor:pointer;transition:.25s;white-space:nowrap;}
+.translate-btn:hover{background:rgba(0,255,127,0.2);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:.5rem;}
+.hamburger span{display:block;width:24px;height:2px;background:var(--green);transition:.3s;border-radius:2px;}
 
-  .section { display: none; padding: 20px 16px 100px; max-width: 700px; margin: 0 auto; }
-  .section.active { display: block; }
-  .section-title {
-    font-family: 'Playfair Display', serif; font-size: 26px;
-    margin-bottom: 4px; display: flex; align-items: center; gap: 10px;
-  }
-  .section-desc { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
+/* ── HERO ── */
+#hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:8rem 2rem 4rem;text-align:center;position:relative;overflow:hidden;}
+.hero-glow{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,255,127,0.08) 0%,transparent 65%);animation:heroPulse 4s ease-in-out infinite;}
+@keyframes heroPulse{0%,100%{opacity:.6}50%{opacity:1}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,255,127,0.1);border:1px solid rgba(0,255,127,0.3);padding:.4rem 1.2rem;border-radius:50px;font-family:var(--font-ui);font-size:.8rem;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:2rem;animation:fadeUp .8s ease both;}
+.hero-badge::before{content:'●';font-size:.5rem;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.hero-title{font-family:var(--font-display);font-size:clamp(2.8rem,7.5vw,6.5rem);font-weight:900;line-height:.95;letter-spacing:-2px;animation:fadeUp .9s .1s ease both;}
+.hero-title .green{color:var(--green);text-shadow:0 0 40px var(--green-glow),0 0 80px rgba(0,255,127,.15);display:block;}
+.hero-title .white{color:var(--white);display:block;}
+.hero-sub{font-family:var(--font-ui);font-size:1.15rem;font-weight:500;color:var(--gray);letter-spacing:3px;text-transform:uppercase;margin:1rem 0 .5rem;animation:fadeUp .9s .15s ease both;}
+.hero-mission{font-size:1.05rem;color:var(--gray);max-width:640px;margin:1.5rem auto 2.5rem;line-height:1.8;animation:fadeUp .9s .2s ease both;}
+.hero-ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;animation:fadeUp .9s .3s ease both;}
+.hero-stats{display:flex;gap:2.5rem;justify-content:center;flex-wrap:wrap;margin-top:4rem;animation:fadeUp .9s .4s ease both;}
+.stat{text-align:center;}
+.stat-num{font-family:var(--font-display);font-size:2rem;font-weight:900;color:var(--green);line-height:1;}
+.stat-label{font-family:var(--font-ui);font-size:.7rem;letter-spacing:2px;color:var(--gray);text-transform:uppercase;margin-top:.3rem;}
 
-  .card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 18px; margin-bottom: 14px;
-  }
-  .card-title { font-weight: 600; font-size: 14px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-  .card-label { font-size: 12px; color: var(--muted); margin-bottom: 6px; font-weight: 500; letter-spacing: .3px; }
+/* ── BUTTONS ── */
+.btn-primary{background:var(--green);color:var(--black);padding:.8rem 2rem;border-radius:8px;font-family:var(--font-ui);font-size:.95rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;transition:.3s;box-shadow:0 0 30px var(--green-glow);border:none;cursor:pointer;display:inline-block;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 50px var(--green-glow);}
+.btn-outline{border:1px solid rgba(0,255,127,0.4);color:var(--green);padding:.8rem 2rem;border-radius:8px;font-family:var(--font-ui);font-size:.95rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;background:transparent;transition:.3s;cursor:pointer;display:inline-block;}
+.btn-outline:hover{background:rgba(0,255,127,0.1);border-color:var(--green);}
 
-  input[type=text], input[type=number], textarea, select.field {
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: var(--radius-sm); padding: 10px 14px;
-    color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px;
-    outline: none; transition: border-color .2s; width: 100%;
-  }
-  input:focus, textarea:focus, select.field:focus { border-color: var(--gold); }
-  textarea { resize: vertical; min-height: 70px; }
-  select.field option { background: #1a1e2a; }
+/* ── SECTIONS ── */
+section{padding:6rem 2rem;}
+.container{max-width:1200px;margin:0 auto;}
+.section-label{font-family:var(--font-ui);font-size:.75rem;letter-spacing:4px;text-transform:uppercase;color:var(--green);margin-bottom:.8rem;}
+.section-title{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;line-height:1.1;margin-bottom:1.5rem;letter-spacing:-1px;}
+.section-desc{color:var(--gray);font-size:1rem;line-height:1.8;max-width:700px;}
+.divider{width:60px;height:2px;background:linear-gradient(90deg,var(--green),transparent);margin:1.5rem 0;}
 
-  .btn {
-    padding: 10px 18px; border-radius: var(--radius-sm); border: 1px solid var(--border);
-    background: var(--surface2); color: var(--text); font-family: 'DM Sans', sans-serif;
-    font-size: 13px; font-weight: 500; cursor: pointer; transition: all .2s;
-    display: inline-flex; align-items: center; gap: 6px;
-  }
-  .btn:hover { border-color: var(--gold); color: var(--gold); }
-  .btn-accent {
-    background: var(--gold); color: #0d0f14; border-color: var(--gold);
-    font-weight: 600;
-  }
-  .btn-accent:hover { opacity: .9; }
-  .btn-sm { padding: 6px 12px; font-size: 12px; }
+/* ── VISION/MISSION BANNER ── */
+#vision{background:var(--dark);padding:5rem 2rem;overflow:hidden;position:relative;}
+#vision::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,255,127,0.04) 0%,transparent 50%,rgba(26,110,189,0.04) 100%);}
+.vm-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:3rem;border-radius:16px;overflow:hidden;border:1px solid rgba(0,255,127,0.12);}
+.vm-panel{padding:3rem;position:relative;overflow:hidden;}
+.vm-panel.vision-panel{background:linear-gradient(135deg,var(--dark2),rgba(0,255,127,0.04));}
+.vm-panel.mission-panel{background:linear-gradient(135deg,rgba(26,110,189,0.06),var(--dark2));}
+.vm-panel::before{content:'';position:absolute;top:-40%;right:-20%;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle,rgba(0,255,127,0.06) 0%,transparent 70%);pointer-events:none;}
+.mission-panel::before{background:radial-gradient(circle,rgba(26,110,189,0.08) 0%,transparent 70%);}
+.vm-icon{font-size:2.5rem;margin-bottom:1.2rem;display:block;}
+.vm-label{font-family:var(--font-display);font-size:.65rem;letter-spacing:4px;text-transform:uppercase;color:var(--green);margin-bottom:.6rem;}
+.mission-panel .vm-label{color:#7ec8f0;}
+.vm-headline{font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--white);margin-bottom:1rem;line-height:1.2;}
+.vm-body{color:var(--gray);font-size:.97rem;line-height:1.8;}
+.vm-pillars{display:flex;flex-direction:column;gap:.6rem;margin-top:1.2rem;}
+.vm-pillar{display:flex;align-items:center;gap:.7rem;font-family:var(--font-ui);font-size:.9rem;color:var(--gray);}
+.vm-pillar::before{content:'→';color:var(--green);font-weight:700;flex-shrink:0;}
+.tri-advantage{margin-top:3rem;}
+.tri-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2rem;}
+.tri-card{background:var(--dark2);border:1px solid rgba(0,255,127,0.1);border-radius:14px;padding:2rem;text-align:center;transition:.4s;position:relative;overflow:hidden;}
+.tri-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green),transparent);transform:scaleX(0);transition:.4s;}
+.tri-card:hover{transform:translateY(-5px);border-color:rgba(0,255,127,0.3);}
+.tri-card:hover::after{transform:scaleX(1);}
+.tri-num{font-family:var(--font-display);font-size:.6rem;letter-spacing:3px;color:var(--green);opacity:.6;margin-bottom:.8rem;}
+.tri-icon{font-size:2rem;margin-bottom:.8rem;display:block;}
+.tri-title{font-family:var(--font-ui);font-size:1rem;font-weight:600;color:var(--white);margin-bottom:.6rem;line-height:1.3;}
+.tri-desc{font-size:.88rem;color:var(--gray);line-height:1.6;}
 
-  .log-entry {
-    display: flex; justify-content: space-between; align-items: flex-start;
-    padding: 12px 0; border-bottom: 1px solid var(--border);
-  }
-  .log-entry:last-child { border-bottom: none; }
-  .log-desc { font-size: 12px; color: var(--muted); margin-top: 3px; }
-  .log-date { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
+/* ── ABOUT ── */
+#about{background:var(--black);}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+.about-card{background:linear-gradient(135deg,var(--dark2),var(--navy));border:1px solid rgba(0,255,127,0.15);border-radius:16px;padding:2.5rem;position:relative;overflow:hidden;}
+.about-card::before{content:'';position:absolute;top:-50%;right:-50%;width:100%;height:100%;background:radial-gradient(circle,rgba(0,255,127,0.06) 0%,transparent 60%);}
+.country-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(255,107,53,0.1);border:1px solid rgba(255,107,53,0.3);color:var(--orange);padding:.4rem .9rem;border-radius:6px;font-family:var(--font-ui);font-size:.8rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1.5rem;}
+.info-list{list-style:none;display:flex;flex-direction:column;gap:.9rem;}
+.info-list li{display:flex;gap:12px;align-items:flex-start;color:var(--gray);font-size:.92rem;line-height:1.5;}
+.info-list li .icon{color:var(--green);font-size:1rem;margin-top:2px;flex-shrink:0;}
+.info-list li strong{color:var(--white);}
 
-  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
-  .stat-box { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; text-align: center; }
-  .stat-value { font-size: 24px; font-weight: 700; color: var(--gold); }
-  .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; margin-top: 6px; }
+/* ── PRINCIPAL ── */
+#principal{background:var(--dark);}
+.principal-grid{display:grid;grid-template-columns:1fr 2fr;gap:3.5rem;align-items:start;}
+.principal-avatar-wrap{text-align:center;}
+.principal-avatar{
+  width:180px;height:180px;border-radius:50%;
+  background:linear-gradient(135deg,var(--green-dark),var(--blue));
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1.5rem;
+  font-family:var(--font-display);font-size:3rem;font-weight:900;color:var(--black);
+  border:3px solid rgba(0,255,127,0.5);box-shadow:0 0 40px var(--green-glow);
+}
+.principal-name{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:var(--white);margin-bottom:.3rem;}
+.principal-role{font-family:var(--font-ui);font-size:.8rem;letter-spacing:2px;color:var(--green);text-transform:uppercase;}
+.cert-tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.2rem;justify-content:center;}
+.cert-tag{background:rgba(0,255,127,0.08);border:1px solid rgba(0,255,127,0.2);color:var(--green);padding:.3rem .7rem;border-radius:50px;font-family:var(--font-ui);font-size:.72rem;letter-spacing:.5px;}
+.principal-bio{color:var(--gray);font-size:.97rem;line-height:1.8;margin-bottom:1.5rem;}
+.global-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.8rem;margin-top:1.5rem;}
+.country-chip{background:var(--dark2);border:1px solid rgba(0,255,127,0.1);border-radius:8px;padding:.6rem .8rem;font-family:var(--font-ui);font-size:.82rem;color:var(--gray);display:flex;align-items:center;gap:.4rem;transition:.2s;}
+.country-chip:hover{border-color:rgba(0,255,127,0.3);color:var(--white);}
+.awards-strip{display:flex;flex-direction:column;gap:1rem;margin-top:2rem;}
+.award-item{background:rgba(255,200,0,0.04);border:1px solid rgba(255,200,0,0.15);border-radius:10px;padding:1.2rem 1.5rem;display:flex;gap:1rem;align-items:flex-start;}
+.award-medal{font-size:1.5rem;flex-shrink:0;}
+.award-text{font-size:.88rem;color:var(--gray);line-height:1.6;font-style:italic;}
+.award-from{font-family:var(--font-ui);font-size:.78rem;letter-spacing:1px;color:#ffd700;margin-top:.4rem;display:block;}
 
-  .report-section { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
-  .report-section:last-child { border-bottom: none; }
-  .report-stat { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; }
-  .report-label { font-size: 13px; color: var(--muted); }
-  .report-value { font-size: 16px; font-weight: 600; color: var(--gold); font-family: 'DM Mono', monospace; }
-  .report-insight { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; margin: 8px 0; font-size: 13px; line-height: 1.5; }
+/* ── OBJECTIVES ── */
+#objectives{background:var(--black);}
+.obj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.5rem;margin-top:3rem;}
+.obj-card{background:var(--dark2);border:1px solid rgba(0,255,127,0.1);border-radius:12px;padding:2rem;position:relative;transition:.4s;overflow:hidden;}
+.obj-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),transparent);transform:scaleX(0);transform-origin:left;transition:.4s;}
+.obj-card:hover{border-color:rgba(0,255,127,0.3);transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.4),0 0 30px var(--green-glow);}
+.obj-card:hover::after{transform:scaleX(1);}
+.obj-num{font-family:var(--font-display);font-size:.65rem;color:var(--green);letter-spacing:3px;margin-bottom:1rem;opacity:.7;}
+.obj-title{font-family:var(--font-ui);font-size:1rem;font-weight:600;color:var(--white);line-height:1.4;}
+.obj-icon{font-size:1.8rem;margin-bottom:.8rem;}
 
-  .toast {
-    position: fixed; bottom: 20px; left: 20px; right: 20px; max-width: 400px;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius-sm); padding: 14px 16px;
-    font-size: 13px; z-index: 999;
-    animation: slideIn .3s ease-out;
-  }
-  @keyframes slideIn { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+/* ── CONSULTING/SERVICES ── */
+#services{background:var(--dark);}
+.services-intro{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;margin-bottom:3rem;}
+.services-tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:2rem;}
+.svc-tab{padding:.45rem 1rem;border-radius:6px;border:1px solid rgba(0,255,127,0.18);background:transparent;color:var(--gray);font-family:var(--font-ui);font-size:.82rem;letter-spacing:.5px;cursor:pointer;transition:.2s;}
+.svc-tab.active,.svc-tab:hover{background:rgba(0,255,127,0.12);color:var(--green);border-color:var(--green);}
+.svc-panels{position:relative;}
+.svc-panel{display:none;}
+.svc-panel.active{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;}
+.svc-item{background:var(--dark2);border:1px solid rgba(0,255,127,0.09);border-radius:10px;padding:1rem 1.2rem;font-family:var(--font-ui);font-size:.9rem;color:var(--gray);display:flex;align-items:flex-start;gap:.7rem;transition:.2s;line-height:1.4;}
+.svc-item:hover{border-color:rgba(0,255,127,0.3);color:var(--white);}
+.svc-item::before{content:'✦';color:var(--green);flex-shrink:0;font-size:.7rem;margin-top:.2rem;}
+.svc-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;}
+.svc-icon-big{font-size:2.5rem;}
+.svc-title-big{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--white);}
+.svc-subtitle{font-family:var(--font-ui);font-size:.8rem;color:var(--gray);letter-spacing:1px;margin-top:.2rem;}
 
-  .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 2000; align-items: center; justify-content: center; }
-  .modal.active { display: flex; }
-  .modal-content { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; }
-  .modal-title { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 16px; }
-  .modal-close { float: right; cursor: pointer; font-size: 24px; color: var(--muted); }
-  .modal-close:hover { color: var(--text); }
+/* ── PROGRAMS ── */
+#programs{background:var(--black);}
+.prog-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:3rem;}
+.prog-card{background:linear-gradient(135deg,var(--dark2),var(--navy));border:1px solid rgba(0,255,127,0.12);border-radius:16px;padding:2.5rem;position:relative;overflow:hidden;transition:.4s;}
+.prog-card.featured{grid-column:span 2;border-color:rgba(0,255,127,0.3);background:linear-gradient(135deg,rgba(0,255,127,0.05),var(--dark2));}
+.prog-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,.5);}
+.prog-badge{display:inline-flex;background:rgba(0,255,127,0.1);border:1px solid rgba(0,255,127,0.25);color:var(--green);padding:.3rem .8rem;border-radius:50px;font-family:var(--font-ui);font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1rem;}
+.prog-title{font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--white);margin-bottom:.8rem;letter-spacing:-.5px;}
+.prog-desc{color:var(--gray);font-size:.93rem;line-height:1.7;margin-bottom:1.5rem;}
+.week-pills{display:flex;gap:.5rem;flex-wrap:wrap;}
+.week-pill{background:rgba(26,110,189,0.2);border:1px solid rgba(26,110,189,0.3);color:#7ec8f0;padding:.3rem .8rem;border-radius:50px;font-family:var(--font-ui);font-size:.72rem;letter-spacing:.5px;}
 
-  .export-option { margin: 12px 0; }
-  .export-option label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
-  .export-option input { cursor: pointer; }
+/* ── TESTIMONIALS ── */
+#testimonials{background:var(--dark);overflow:hidden;}
+.testi-scroll{display:flex;gap:1.5rem;margin-top:2.5rem;overflow-x:auto;padding-bottom:1rem;scrollbar-width:thin;scrollbar-color:var(--green) transparent;}
+.testi-card{background:var(--dark2);border:1px solid rgba(0,255,127,0.1);border-radius:14px;padding:1.8rem;min-width:300px;max-width:340px;flex-shrink:0;transition:.3s;position:relative;}
+.testi-card:hover{border-color:rgba(0,255,127,0.28);transform:translateY(-3px);}
+.testi-medal{position:absolute;top:1.2rem;right:1.2rem;font-size:1.2rem;}
+.testi-quote{color:var(--gray);font-size:.92rem;line-height:1.7;font-style:italic;margin-bottom:1.2rem;}
+.testi-author{font-family:var(--font-ui);font-size:.9rem;font-weight:600;color:var(--white);}
+.testi-role{font-family:var(--font-ui);font-size:.75rem;color:var(--green);letter-spacing:.5px;margin-top:.2rem;}
 
-  .month-selector { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; }
-  .month-selector select { flex: 1; }
-  .month-selector-label { font-size: 12px; color: var(--muted); font-weight: 500; }
+/* ── FUNDING ── */
+#funding{background:var(--black);}
+.funding-hero{background:linear-gradient(135deg,rgba(0,255,127,0.06),rgba(26,110,189,0.06));border:1px solid rgba(0,255,127,0.2);border-radius:20px;padding:3rem;margin-bottom:3rem;text-align:center;}
+.funding-amount{font-family:var(--font-display);font-size:clamp(2rem,5vw,4rem);font-weight:900;color:var(--green);text-shadow:0 0 40px var(--green-glow);margin:1rem 0 .5rem;}
+.budget-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.5rem;margin-top:2rem;}
+.budget-item{background:var(--dark2);border:1px solid rgba(0,255,127,0.1);border-radius:12px;padding:1.8rem;}
+.budget-label{font-family:var(--font-ui);font-size:.78rem;letter-spacing:2px;color:var(--gray);text-transform:uppercase;margin-bottom:.5rem;}
+.budget-val{font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--green);}
+.budget-note{font-size:.83rem;color:var(--gray);margin-top:.4rem;}
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1rem;margin-top:2rem;}
+.metric-card{background:rgba(0,255,127,0.05);border:1px solid rgba(0,255,127,0.15);border-radius:10px;padding:1.5rem;text-align:center;}
+.metric-val{font-family:var(--font-display);font-size:1.7rem;font-weight:700;color:var(--green);}
+.metric-label{font-family:var(--font-ui);font-size:.75rem;letter-spacing:1.5px;color:var(--gray);text-transform:uppercase;margin-top:.4rem;}
+
+/* ── BOARD ── */
+#board{background:var(--dark);}
+.board-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-top:3rem;}
+.board-card{background:var(--dark2);border:1px solid rgba(0,255,127,0.1);border-radius:12px;padding:2rem;position:relative;overflow:hidden;transition:.4s;text-align:center;}
+.board-card:hover{border-color:rgba(0,255,127,0.3);transform:translateY(-4px);}
+.board-card.president{border-color:rgba(0,255,127,0.35);background:linear-gradient(135deg,rgba(0,255,127,0.05),var(--dark2));}
+.board-avatar{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--green-dark),var(--blue));display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--black);border:2px solid rgba(0,255,127,0.4);}
+.board-name{font-family:var(--font-ui);font-size:.95rem;font-weight:600;color:var(--white);letter-spacing:.5px;margin-bottom:.4rem;}
+.board-title{font-family:var(--font-ui);font-size:.75rem;letter-spacing:2px;color:var(--green);text-transform:uppercase;}
+
+/* ── THEORY OF CHANGE ── */
+#toc{background:var(--black);}
+.toc-steps{display:flex;flex-direction:column;gap:0;margin-top:3rem;}
+.toc-step{display:flex;gap:2rem;padding-bottom:2.5rem;position:relative;}
+.toc-step::before{content:'';position:absolute;left:28px;top:60px;bottom:0;width:1px;background:linear-gradient(180deg,rgba(0,255,127,0.3),transparent);}
+.toc-step:last-child::before{display:none;}
+.step-num{width:56px;height:56px;border-radius:50%;background:rgba(0,255,127,0.1);border:2px solid rgba(0,255,127,0.3);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--green);flex-shrink:0;}
+.step-content{flex:1;padding-top:.6rem;}
+.step-title{font-family:var(--font-ui);font-size:1.05rem;font-weight:600;color:var(--white);margin-bottom:.5rem;letter-spacing:.5px;}
+.step-desc{color:var(--gray);font-size:.93rem;line-height:1.7;}
+
+/* ── LINKS ── */
+#links{background:var(--dark);}
+.links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem;margin-top:3rem;}
+.link-card{background:var(--dark2);border:1px solid rgba(0,255,127,0.1);border-radius:10px;padding:1.1rem 1.4rem;display:flex;align-items:center;gap:12px;text-decoration:none;transition:.3s;color:var(--white);}
+.link-card:hover{border-color:rgba(0,255,127,0.35);background:rgba(0,255,127,0.05);transform:translateX(4px);}
+.link-arrow{color:var(--green);font-size:1.1rem;transition:.3s;margin-left:auto;flex-shrink:0;}
+.link-card:hover .link-arrow{transform:translateX(4px);}
+.link-icon{width:34px;height:34px;background:rgba(0,255,127,0.1);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;}
+.link-info{flex:1;min-width:0;}
+.link-name{font-family:var(--font-ui);font-size:.9rem;font-weight:600;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.link-type{font-size:.73rem;color:var(--gray);margin-top:2px;}
+
+/* ── CONTACT ── */
+#contact{background:var(--black);}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;}
+.contact-methods{display:flex;flex-direction:column;gap:1.5rem;margin-top:2rem;}
+.contact-card{background:var(--dark2);border:1px solid rgba(0,255,127,0.12);border-radius:12px;padding:1.6rem;display:flex;gap:1.2rem;align-items:center;text-decoration:none;transition:.3s;}
+.contact-card:hover{border-color:rgba(0,255,127,0.3);transform:translateX(6px);box-shadow:0 0 30px var(--green-glow);}
+.contact-icon{width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+.contact-icon.email{background:rgba(26,110,189,0.15);border:1px solid rgba(26,110,189,0.3);}
+.contact-icon.wa{background:rgba(0,255,127,0.1);border:1px solid rgba(0,255,127,0.25);}
+.contact-icon.phone{background:rgba(255,107,53,0.1);border:1px solid rgba(255,107,53,0.25);}
+.contact-info strong{display:block;font-family:var(--font-ui);font-size:.95rem;color:var(--white);margin-bottom:.2rem;}
+.contact-info span{font-size:.88rem;color:var(--gray);}
+.map-placeholder{background:linear-gradient(135deg,var(--dark2),var(--navy));border:1px solid rgba(0,255,127,0.15);border-radius:16px;padding:2.5rem 2rem;text-align:center;position:relative;overflow:hidden;}
+.map-placeholder::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,255,127,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,127,0.04) 1px,transparent 1px);background-size:28px 28px;}
+.map-pin{font-size:2.8rem;margin-bottom:1rem;}
+.map-city{font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--green);margin-bottom:.4rem;}
+.map-country{font-family:var(--font-ui);letter-spacing:3px;color:var(--gray);text-transform:uppercase;font-size:.85rem;}
+.region-tags{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center;margin-top:1.5rem;}
+.region-tag{background:rgba(0,255,127,0.08);border:1px solid rgba(0,255,127,0.18);color:var(--green);padding:.25rem .7rem;border-radius:50px;font-size:.72rem;font-family:var(--font-ui);letter-spacing:.8px;}
+
+/* ── FOOTER ── */
+footer{background:var(--navy);border-top:1px solid rgba(0,255,127,0.15);padding:3rem 2rem 1.5rem;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2.5rem;margin-bottom:2.5rem;}
+.footer-brand .logo{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--green);letter-spacing:2px;margin-bottom:.5rem;}
+.footer-brand .tagline{color:var(--gray);font-size:.88rem;line-height:1.6;}
+.footer-col h4{font-family:var(--font-ui);font-size:.75rem;letter-spacing:3px;color:var(--green);text-transform:uppercase;margin-bottom:1rem;}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:.55rem;}
+.footer-col ul a{color:var(--gray);text-decoration:none;font-size:.88rem;transition:.2s;}
+.footer-col ul a:hover{color:var(--green);}
+.footer-brands-bar{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.2rem;}
+.brand-pill{background:rgba(0,255,127,0.08);border:1px solid rgba(0,255,127,0.2);color:var(--green);padding:.3rem .8rem;border-radius:50px;font-family:var(--font-ui);font-size:.78rem;letter-spacing:.5px;}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.06);padding-top:1.5rem;text-align:center;color:var(--gray);font-size:.83rem;font-family:var(--font-ui);letter-spacing:.5px;}
+.footer-bottom span{color:var(--green);}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(28px);transition:.75s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ── SCROLL TOP ── */
+.scroll-top{position:fixed;bottom:2rem;right:2rem;width:44px;height:44px;border-radius:50%;background:var(--green);color:var(--black);display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;z-index:999;opacity:0;transform:translateY(20px);transition:.3s;box-shadow:0 0 20px var(--green-glow);border:none;}
+.scroll-top.show{opacity:1;transform:translateY(0);}
+.scroll-top:hover{transform:translateY(-4px);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .nav-links-wrap{display:none;position:fixed;top:70px;left:0;right:0;background:rgba(5,10,14,0.97);border-bottom:1px solid rgba(0,255,127,0.2);flex-direction:column;padding:1.5rem 2rem;gap:1.2rem;z-index:999;}
+  .nav-links-wrap.open{display:flex;}
+  .nav-links{flex-direction:column;gap:1rem;}
+  .hamburger{display:flex;}
+  .about-grid,.prog-grid,.contact-grid,.footer-grid,.services-intro,.principal-grid,.vm-grid,.tri-grid{grid-template-columns:1fr;}
+  .prog-card.featured{grid-column:span 1;}
+  .hero-stats{gap:1.5rem;}
+  nav.shifted{top:0;}
+}
 </style>
 </head>
 <body>
+<div class="circuit-bg"></div>
 
-<div id="splash" class="splash-bg">
-  <div class="orb orb1"></div>
-  <div class="orb orb2"></div>
-  <div class="splash-logo">Wholeness</div>
-  <div class="splash-sub">Life Tracker • Personal Progress Management</div>
-  <div class="splash-credit">Team21 Academy | © Innocent Forteh</div>
-  <form class="splash-form" onsubmit="handleLogin(event)">
-    <input type="text" id="username" placeholder="Username" required>
-    <button type="submit" class="btn-primary">Enter</button>
-  </form>
+<!-- GOOGLE TRANSLATE (hidden, real widget) -->
+<div id="google_translate_element" style="display:none;visibility:hidden;height:0;overflow:hidden;"></div>
+
+<!-- TRANSLATE BAR (slides down over nav) -->
+<div class="translate-bar" id="translateBar">
+  <span class="translate-bar-title">🌐 Select Language</span>
+  <button class="lang-btn" onclick="doTranslate('fr')">🇫🇷 Français</button>
+  <button class="lang-btn" onclick="doTranslate('es')">🇪🇸 Español</button>
+  <button class="lang-btn" onclick="doTranslate('pt')">🇵🇹 Português</button>
+  <button class="lang-btn" onclick="doTranslate('ar')">🇸🇦 العربية</button>
+  <button class="lang-btn" onclick="doTranslate('de')">🇩🇪 Deutsch</button>
+  <button class="lang-btn" onclick="doTranslate('zh-CN')">🇨🇳 中文</button>
+  <button class="lang-btn" onclick="doTranslate('en')" id="engBtn">🇬🇧 English</button>
+  <span class="pidgin-note">🇨🇲 Pidgin: coming soon!</span>
+  <button class="lang-close" id="closeBar" title="Close">✕</button>
 </div>
 
-<div id="app">
-  <header>
-    <div class="header-left">
-      <div class="header-logo">◆ Wholeness</div>
-    </div>
-    <div class="header-info">
-      <div class="header-user" id="header-user"></div>
-      <div class="header-date" id="header-date"></div>
-      <div class="header-btn" id="export-btn" onclick="toggleExportModal()" title="Export data">📊 Export</div>
-      <div class="header-btn" id="logout-btn" onclick="handleLogout()" title="Logout">🚪 Logout</div>
-    </div>
-  </header>
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#hero" class="nav-logo">
+    <div class="logo-icon">T21</div>
+    PRACTICAL
+  </a>
+  <div class="nav-links-wrap" id="navLinks">
+    <ul class="nav-links">
+      <li><a href="#vision">Vision</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#programs">Programs</a></li>
+      <li><a href="#funding">Funding</a></li>
+      <li><a href="#board">Board</a></li>
+      <li><a href="#links">Resources</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="translate-btn" id="translateBtn">🌐 Translate ▾</button>
+  </div>
+  <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+</nav>
 
-  <nav id="nav">
-    <button class="nav-btn active" onclick="switchTab('spirit')"><div class="icon">🧘</div><div>Spirit</div></button>
-    <button class="nav-btn" onclick="switchTab('family')"><div class="icon">👨‍👩‍👧</div><div>Family</div></button>
-    <button class="nav-btn" onclick="switchTab('finance')"><div class="icon">💰</div><div>Finance</div></button>
-    <button class="nav-btn" onclick="switchTab('physical')"><div class="icon">💪</div><div>Physical</div></button>
-    <button class="nav-btn" onclick="switchTab('edu')"><div class="icon">📚</div><div>Education</div></button>
-    <button class="nav-btn" onclick="switchTab('pro')"><div class="icon">🚀</div><div>Professional</div></button>
-    <button class="nav-btn" onclick="switchTab('social')"><div class="icon">🌍</div><div>Social</div></button>
-  </nav>
-
-  <!-- SPIRIT -->
-  <div id="spirit" class="section active">
-    <h2 class="section-title"><span>🧘</span>Spiritual Wellbeing</h2>
-    <p class="section-desc">Track your meditation, reflection, and spiritual growth.</p>
-    
-    <div class="card">
-      <div class="card-title">Monthly Goals</div>
-      <textarea id="spirit-goals" placeholder="What do you want to achieve spiritually this month?"></textarea>
-      <button class="btn btn-accent btn-sm" style="margin-top:10px" onclick="saveSpiritGoals()">Save Goals</button>
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div>
+    <div class="hero-badge">🌍 Cameroon · Est. 2006 · Team21 Academy</div>
+    <h1 class="hero-title">
+      <span class="white">PRACTICAL</span>
+      <span class="green">CONNECTING</span>
+      <span class="white" style="font-size:.6em;letter-spacing:0">PEOPLE TO RESOURCES</span>
+    </h1>
+    <p class="hero-sub">Team21 Academy · Yaounde, Cameroon</p>
+    <p class="hero-mission">Transforming organizations &amp; empowering leaders in a digital world — through AI innovation, servant leadership, USG compliance expertise, and battle-tested training across 4 continents.</p>
+    <div class="hero-ctas">
+      <a href="#programs" class="btn-primary">Explore Programs</a>
+      <a href="#services" class="btn-outline">Our Services</a>
+      <a href="#contact" class="btn-outline">Partner With Us</a>
     </div>
-
-    <div class="card">
-      <div class="card-title">Log Activity</div>
-      <div class="month-selector">
-        <span class="month-selector-label">Assign to Month:</span>
-        <select class="field" id="spirit-month"></select>
-      </div>
-      <div class="card-label">Activity Type</div>
-      <select class="field" id="spirit-type">
-        <option>Meditation</option>
-        <option>Prayer</option>
-        <option>Journaling</option>
-        <option>Reflection</option>
-        <option>Nature Walk</option>
-        <option>Other</option>
-      </select>
-      <div class="card-label" style="margin-top:12px">Duration (minutes)</div>
-      <input type="number" id="spirit-time" placeholder="0" min="0">
-      <div class="card-label" style="margin-top:12px">Notes</div>
-      <textarea id="spirit-notes" placeholder="How did it feel?"></textarea>
-      <button class="btn btn-accent btn-sm" style="margin-top:10px" onclick="logSpirit()">Log Activity</button>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Recent Activity</div>
-      <div id="spirit-log-list"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title" style="justify-content:space-between">
-        <span>📈 Insights</span>
-        <button class="btn btn-sm" onclick="generateSpiritReport()">Generate Report</button>
-      </div>
-      <div id="spirit-report"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">📊 Month Comparison</div>
-      <div class="card-label">Select Month to View:</div>
-      <select class="field" id="spirit-compare-month" style="margin-bottom:12px" onchange="generateSpiritMonthComparison()"></select>
-      <div id="spirit-month-comparison"></div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">24+</div><div class="stat-label">Years Experience</div></div>
+      <div class="stat"><div class="stat-num">$200M+</div><div class="stat-label">Portfolios Managed</div></div>
+      <div class="stat"><div class="stat-num">1,000+</div><div class="stat-label">Leaders Trained</div></div>
+      <div class="stat"><div class="stat-num">15+</div><div class="stat-label">Countries Served</div></div>
+      <div class="stat"><div class="stat-num">86%</div><div class="stat-label">Capstone Completion</div></div>
     </div>
   </div>
+</section>
 
-  <!-- FAMILY -->
-  <div id="family" class="section">
-    <h2 class="section-title"><span>👨‍👩‍👧</span>Family Connections</h2>
-    <p class="section-desc">Track time with loved ones and strengthen relationships.</p>
-
-    <div class="card">
-      <div class="card-title">Monthly Goals</div>
-      <textarea id="family-goals" placeholder="What are your family goals this month?"></textarea>
-      <button class="btn btn-accent btn-sm" style="margin-top:10px" onclick="saveFamilyGoals()">Save Goals</button>
+<!-- VISION & MISSION -->
+<section id="vision">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Our Foundation</div>
+      <h2 class="section-title">Vision &amp; <span style="color:var(--green)">Mission</span></h2>
+      <div class="divider"></div>
     </div>
-
-    <div class="card">
-      <div class="card-title">Log Activity</div>
-      <div class="month-selector">
-        <span class="month-selector-label">Assign to Month:</span>
-        <select class="field" id="family-month"></select>
+    <div class="vm-grid reveal">
+      <div class="vm-panel vision-panel">
+        <span class="vm-icon">🔭</span>
+        <div class="vm-label">Our Vision</div>
+        <div class="vm-headline">A world where every person has access to the tools, knowledge, and leadership to shape their own future.</div>
+        <p class="vm-body">We envision communities — especially the most marginalized — fully equipped to participate in the digital economy, lead with integrity, and build institutions that endure. From IDP camps in Cameroon to boardrooms across four continents, we work to close the gap between potential and opportunity.</p>
+        <div class="vm-pillars">
+          <div class="vm-pillar">Digital inclusion for every community</div>
+          <div class="vm-pillar">Ethical AI leadership at every level</div>
+          <div class="vm-pillar">Servant leadership as the global standard</div>
+          <div class="vm-pillar">Sustainable institutions built from within</div>
+        </div>
       </div>
-      <div class="card-label">Activity</div>
-      <input type="text" id="family-activity" placeholder="e.g., Dinner with family">
-      <div class="card-label" style="margin-top:12px">Category</div>
-      <select class="field" id="family-cat">
-        <option>Quality Time</option>
-        <option>Support</option>
-        <option>Celebration</option>
-        <option>Communication</option>
-        <option>Help</option>
-      </select>
-      <div class="card-label" style="margin-top:12px">Notes</div>
-      <textarea id="family-notes" placeholder="Who, what, how it went..."></textarea>
-      <button class="btn btn-accent btn-sm" style="margin-top:10px" onclick="logFamily()">Log Activity</button>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Recent Activity</div>
-      <div id="family-log-list"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title" style="justify-content:space-between">
-        <span>📈 Insights</span>
-        <button class="btn btn-sm" onclick="generateFamilyReport()">Generate Report</button>
+      <div class="vm-panel mission-panel">
+        <span class="vm-icon">🎯</span>
+        <div class="vm-label" style="color:#7ec8f0;">Our Mission</div>
+        <div class="vm-headline">Connecting people to resources — through training, compliance, technology, and servant-first leadership.</div>
+        <p class="vm-body">Practical / Team21 Academy delivers intensive, bilingual AI and entrepreneurship training alongside expert consulting in USG compliance, cybersecurity, and organizational development — creating pathways to employment, self-sufficiency, and institutional strength for populations that have been excluded.</p>
+        <div class="vm-pillars" style="--vmp-color:#7ec8f0;">
+          <div class="vm-pillar" style="--vmp-color:#7ec8f0;">Build real, applied skills that transfer to income</div>
+          <div class="vm-pillar">Reach the unreached — IDPs, youth, low-income students</div>
+          <div class="vm-pillar">Strengthen organizations from compliance to culture</div>
+          <div class="vm-pillar">Create self-sustaining ecosystems of empowerment</div>
+        </div>
       </div>
-      <div id="family-report"></div>
     </div>
 
-    <div class="card">
-      <div class="card-title">📊 Month Comparison</div>
-      <div class="card-label">Select Month to View:</div>
-      <select class="field" id="family-compare-month" style="margin-bottom:12px" onchange="generateFamilyMonthComparison()"></select>
-      <div id="family-month-comparison"></div>
+    <!-- TRI-SECTOR ADVANTAGE -->
+    <div class="tri-advantage reveal">
+      <div class="section-label" style="margin-top:3rem;">The Tri-Sector Advantage</div>
+      <h3 class="section-title" style="font-size:1.6rem;">Three Pillars. One Integrated Approach.</h3>
+      <div class="tri-grid">
+        <div class="tri-card">
+          <div class="tri-num">01</div>
+          <span class="tri-icon">🏛️</span>
+          <div class="tri-title">USG Compliance &amp; Market Access</div>
+          <div class="tri-desc">24+ years inside USAID and U.S. State Department — insider expertise from SAM.gov to full lifecycle grant management.</div>
+        </div>
+        <div class="tri-card">
+          <div class="tri-num">02</div>
+          <span class="tri-icon">🤖</span>
+          <div class="tri-title">AI &amp; Digital Transformation</div>
+          <div class="tri-desc">Practical, ethical, and secure AI adoption for organizations of every size. Certified in AI Governance, Cybersecurity, and Prompt Engineering.</div>
+        </div>
+        <div class="tri-card">
+          <div class="tri-num">03</div>
+          <span class="tri-icon">🌿</span>
+          <div class="tri-title">Servant Leadership &amp; Development</div>
+          <div class="tri-desc">Leadership that serves first. 15+ years building institutions through character and competence — driving trust and lasting cultures.</div>
+        </div>
+      </div>
     </div>
   </div>
+</section>
 
-  <!-- FINANCE -->
-  <div id="finance" class="section">
-    <h2 class="section-title"><span>💰</span>Financial Health</h2>
-    <p class="section-desc">Track spending, saving, and financial progress.</p>
-
-    <div class="card">
-      <div class="card-title">Monthly Goals</div>
-      <textarea id="finance-goals" placeholder="What are your financial goals this month?"></textarea>
-      <button class="btn btn-accent btn-sm" style="margin-top:10px" onclick="saveFinanceGoals()">Save Goals</button>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Log Transaction</div>
-      <div class="month-selector">
-        <span class="month-selector-label">Assign to Month:</span>
-        <select class="field" id="finance-month"></select>
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="reveal">
+        <div class="section-label">Who We Are</div>
+        <h2 class="section-title">Practical <span style="color:var(--green)">&amp; Team21 Academy</span></h2>
+        <div class="divider"></div>
+        <p class="section-desc" style="margin-bottom:1.2rem;">
+          Practical (also operating as Team21 Academy) is a premier consulting and training firm founded by Innocent Forteh — a seasoned US Government Acquisition Specialist, PMP® Certified Project Manager, and Servant Leadership expert.
+        </p>
+        <p class="section-desc" style="margin-bottom:1.2rem;">
+          With over 24 years managing $200M+ portfolios for USAID and the U.S. State Department, we deliver battle-tested strategies that work in complex environments across 4 continents.
+        </p>
+        <p class="section-desc">
+          Our approach combines the rigor of US Government compliance with the agility of Artificial Intelligence and the empathy of Servant Leadership — providing the roadmap to your success whether you are an NGO, corporation, or individual professional.
+        </p>
+        <div style="margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap;">
+          <a href="#contact" class="btn-primary">Get In Touch</a>
+          <a href="https://inno4te.github.io/team21-consulting/" target="_blank" class="btn-outline">Team21 Consulting ↗</a>
+        </div>
       </div>
-      <div class="card-label">Description</div>
-      <input type="text" id="fin-desc" placeholder="e.g., Grocery shopping">
-      <div class="card-label" style="margin-top:12px">Amount</div>
-      <input type="number" id="fin-amount" placeholder="0" min="0" step="0.01">
-      <div class="card-label" style="margin-top:12px">Type</div>
-      <select class="field" id="fin-type">
-        <option>Expense</option>
-        <option>Income</option>
-        <option>Saving</option>
-        <option>Investment</option>
-      </select>
-      <div class="card-label" style="margin-top:12px">Category</div>
-      <select class="field" id="fin-cat">
-        <option>Food</option>
-        <option>Transport</option>
-        <option>Utilities</option>
-        <option>Entertainment</option>
-        <option>Healthcare</option>
-        <option>Education</option>
-        <option>Other</option>
-      </select>
-      <button class="btn btn-accent btn-sm" style="margin-top:10px" onclick="logFinance()">Log Transaction</button>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Recent Transactions</div>
-      <div id="finance-log-list"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title" style="justify-content:space-between">
-        <span>📈 Insights</span>
-        <button class="btn btn-sm" onclick="generateFinanceReport()">Generate Report</button>
+      <div class="about-card reveal">
+        <div class="country-tag">📍 Cameroon &amp; Global</div>
+        <ul class="info-list">
+          <li><span class="icon">✦</span><span><strong>Legal Name:</strong> Practical (also Team21 Academy)</span></li>
+          <li><span class="icon">✦</span><span><strong>Country:</strong> Cameroon (serving 15+ countries)</span></li>
+          <li><span class="icon">✦</span><span><strong>Staff:</strong> 15 FTE — instructors, mentors, coordinators, admin</span></li>
+          <li><span class="icon">✦</span><span><strong>Category:</strong> Consulting · Training · Talent Incubation · AI &amp; Digital Skills</span></li>
+          <li><span class="icon">✦</span><span><strong>Founded:</strong> 2006 · Servant Leadership: 2016 · AI Unlocked: 2023</span></li>
+          <li><span class="icon">✦</span><span><strong>Languages:</strong> English &amp; French (bilingual), live interpretation</span></li>
+          <li><span class="icon">✦</span><span><strong>Group Brands:</strong> Inno4te Publishing · Team21 Exams</span></li>
+          <li><span class="icon">✦</span><span><strong>Mission:</strong> Connecting people to resources</span></li>
+        </ul>
       </div>
-      <div id="finance-report"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">📊 Month Comparison</div>
-      <div class="card-label">Select Month to View:</div>
-      <select class="field" id="finance-compare-month" style="margin-bottom:12px" onchange="generateFinanceMonthComparison()"></select>
-      <div id="finance-month-comparison"></div>
     </div>
   </div>
+</section>
 
-  <!-- PHYSICAL -->
-  <div id="physical" class="section">
-    <h2 class="section-title"><span>💪</span>Physical Health</h2>
-    <p class="section-desc">Track workouts, nutrition, sleep, and wellness.</p>
-
-    <div class="card">
-      <div class="card-title">Monthly Goals</div>
-      <textarea id="physical-goals" placeholder="What are your fitness goals this month?"></textarea>
-      <button class="btn btn-accent btn-sm" style="margin-top:10px" onclick="savePhysicalGoals()">Save Goals</button>
+<!-- PRINCIPAL -->
+<section id="principal">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Our Principal</div>
+      <h2 class="section-title">The Man Behind <span style="color:var(--green)">the Mission</span></h2>
+      <div class="divider"></div>
     </div>
-
-    <div class="card">
-      <div class="card-title">Log Activity</div>
-      <div class="month-selector">
-        <span class="month-selector-label">Assign to Month:</span>
-        <select class="field" id="physical-month"></select>
+    <div class="principal-grid reveal">
+      <div class="principal-avatar-wrap">
+        <div class="principal-avatar">IF</div>
+        <div class="principal-name">Innocent Forteh</div>
+        <div class="principal-role">CEO &amp; Principal Consultant</div>
+        <div class="cert-tags">
+          <span class="cert-tag">PMP® Certified</span>
+          <span class="cert-tag">Google Project Mgmt</span>
+          <span class="cert-tag">Google Cybersecurity</span>
+          <span class="cert-tag">AI Governance · Stanford/GSA</span>
+          <span class="cert-tag">Prompt Engineering · Vanderbilt</span>
+          <span class="cert-tag">USAID Data-Informed Dev.</span>
+          <span class="cert-tag">M.A. Organizational Leadership</span>
+          <span class="cert-tag">Manchester Met. Marketing</span>
+        </div>
+        <div style="margin-top:1.5rem;">
+          <a href="https://inno4te.github.io/workinprogress/" target="_blank" class="btn-outline" style="font-size:.82rem;padding:.5rem 1.2rem;">Full Profile ↗</a>
+        </div>
       </div>
-      <div class="card-label">Activity Type</div>
-      <select class="field" id="phys-type">
-        <option>Exercise</option>
-        <option>Sleep</option>
-        <option>Nutrition</option>
-        <option>Hydration</option>
-        <option>Stretching</option>
-        <option>Other</option>
-      </select>
-      <div class="card-label" style="margin-top:12px">Duration/Amount</div>
-      <input type="text" id="phys-amount" placeholder="e.g., 30 min, 8 glasses">
-      <div class="card-label" style="margin-top:12px">Notes</div>
-      <textarea id="phys-notes" placeholder="Details..."></textarea>
-      <button class="btn btn-accent btn-sm" style="margin-top:10px" onclick="logPhysical()">Log Activity</button>
-    </div>
+      <div>
+        <p class="principal-bio">Innocent Forteh bridges International Development, Technology, and Humanitarian Leadership. As a PMP® Certified Acquisition Specialist, he managed <strong style="color:var(--white);">$200M+</strong> in bilateral programs for USAID and the U.S. State Department across Cameroon, DRC, Namibia, Gabon, Angola, Iraq, and Haiti.</p>
+        <p class="principal-bio">He served as Systems Administrator for the Foreign &amp; Commonwealth Office and holds certifications in Google Cybersecurity, AI Governance, and Prompt Engineering. As Co-Founder of Team21 Academy, he has trained over <strong style="color:var(--white);">1,000 leaders</strong> through servant-first programs.</p>
+        <p class="principal-bio" style="color:var(--green);font-style:italic;">"Tri-Sector Leader · PMP® · AI Governance · Servant Leader"</p>
 
-    <div class="card">
-      <div class="card-title">Recent Activity</div>
-      <div id="physical-log-list"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title" style="justify-content:space-between">
-        <span>📈 Insights</span>
-        <button class="btn btn-sm" onclick="generatePhysicalReport()">Generate Report</button>
+        <div class="section-label" style="margin-top:2rem;margin-bottom:1rem;">Global Reach — Forged Across Continents</div>
+        <div class="global-grid">
+          <div class="country-chip">🇨🇲 Cameroon</div>
+          <div class="country-chip">🇨🇩 DR Congo</div>
+          <div class="country-chip">🇭🇹 Haiti</div>
+          <div class="country-chip">🇮🇶 Iraq</div>
+          <div class="country-chip">🇳🇦 Namibia</div>
+          <div class="country-chip">🇬🇦 Gabon</div>
+          <div class="country-chip">🇦🇴 Angola</div>
+          <div class="country-chip">🇬🇳 Guinea</div>
+          <div class="country-chip">🇪🇹 Ethiopia</div>
+          <div class="country-chip">🇰🇪 Kenya</div>
+          <div class="country-chip">🇷🇼 Rwanda</div>
+          <div class="country-chip">🇹🇿 Tanzania</div>
+          <div class="country-chip">🇿🇦 South Africa</div>
+          <div class="country-chip">🇬🇭 Ghana</div>
+          <div class="country-chip">🌍 + More</div>
+        </div>
       </div>
-      <div id="physical-report"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">📊 Month Comparison</div>
-      <div class="card-label">Select Month to View:</div>
-      <select class="field" id="physical-compare-month" style="margin-bottom:12px" onchange="generatePhysicalMonthComparison()"></select>
-      <div id="physical-month-comparison"></div>
     </div>
   </div>
+</section>
 
-  <!-- EDUCATION -->
-  <div id="edu" class="section">
-    <h2 class="section-title"><span>📚</span>Education & Learning</h2>
-    <p class="section-desc">Track learning progress, courses, and skill development.</p>
-
-    <div class="card">
-      <div class="card-title">Monthly Goals</div>
-      <textarea id="edu-goals" placeholder="What do you want to learn this month?"></textarea>
-      <button class="btn btn-accent btn-sm" style="margin-top:10px" onclick="saveEduGoals()">Save Goals</button>
+<!-- OBJECTIVES -->
+<section id="objectives">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">What We Stand For</div>
+      <h2 class="section-title">Our <span style="color:var(--green)">Objectives</span></h2>
+      <div class="divider"></div>
+      <p class="section-desc">Seven pillars guide everything we do — from curriculum design to community development.</p>
     </div>
-
-    <div class="card">
-      <div class="card-title">Log Learning</div>
-      <div class="month-selector">
-        <span class="month-selector-label">Assign to Month:</span>
-        <select class="field" id="edu-month"></select>
-      </div>
-      <div class="card-label">Topic</div>
-      <input type="text" id="edu-topic" placeholder="What did you learn?">
-      <div class="card-label" style="margin-top:12px">Time Spent (minutes)</div>
-      <input type="number" id="edu-time" placeholder="0" min="0">
-      <div class="card-label" style="margin-top:12px">Type</div>
-      <select class="field" id="edu-type">
-        <option>Reading</option>
-        <option>Video</option>
-        <option>Course</option>
-        <option>Practice</option>
-        <option>Discussion</option>
-        <option>Other</option>
-      </select>
-      <div class="card-label" style="margin-top:12px">Notes</div>
-      <textarea id="edu-notes" placeholder="Key takeaways..."></textarea>
-      <button class="btn btn-accent btn-sm" style="margin-top:10px" onclick="logEdu()">Log Learning</button>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Recent Learning</div>
-      <div id="edu-log-list"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title" style="justify-content:space-between">
-        <span>📈 Insights</span>
-        <button class="btn btn-sm" onclick="generateEduReport()">Generate Report</button>
-      </div>
-      <div id="edu-report"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">📊 Month Comparison</div>
-      <div class="card-label">Select Month to View:</div>
-      <select class="field" id="edu-compare-month" style="margin-bottom:12px" onchange="generateEduMonthComparison()"></select>
-      <div id="edu-month-comparison"></div>
+    <div class="obj-grid">
+      <div class="obj-card reveal"><div class="obj-icon">🏗️</div><div class="obj-num">01</div><div class="obj-title">Enterprise Architecture, Systems Strengthening &amp; Leadership Development</div></div>
+      <div class="obj-card reveal"><div class="obj-icon">📚</div><div class="obj-num">02</div><div class="obj-title">Education, Knowledge Advancement &amp; Lifelong Learning</div></div>
+      <div class="obj-card reveal"><div class="obj-icon">✝️</div><div class="obj-num">03</div><div class="obj-title">Faith-Based Values, Ethics &amp; Community Development</div></div>
+      <div class="obj-card reveal"><div class="obj-icon">🏡</div><div class="obj-num">04</div><div class="obj-title">Family Life, Social Stability &amp; Relationship Enrichment</div></div>
+      <div class="obj-card reveal"><div class="obj-icon">🎨</div><div class="obj-num">05</div><div class="obj-title">Arts, Culture &amp; Creative Expression Development</div></div>
+      <div class="obj-card reveal"><div class="obj-icon">📡</div><div class="obj-num">06</div><div class="obj-title">Effective Communication &amp; Responsible AI and Information Sharing</div></div>
+      <div class="obj-card reveal"><div class="obj-icon">💰</div><div class="obj-num">07</div><div class="obj-title">Sustainable Economic Empowerment</div></div>
     </div>
   </div>
+</section>
 
-  <!-- PROFESSIONAL -->
-  <div id="pro" class="section">
-    <h2 class="section-title"><span>🚀</span>Professional Growth</h2>
-    <p class="section-desc">Track career achievements, projects, and professional development.</p>
-
-    <div class="card">
-      <div class="card-title">Monthly Goals</div>
-      <textarea id="pro-goals" placeholder="What are your career goals this month?"></textarea>
-      <button class="btn btn-accent btn-sm" style="margin-top:10px" onclick="saveProGoals()">Save Goals</button>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Log Activity</div>
-      <div class="month-selector">
-        <span class="month-selector-label">Assign to Month:</span>
-        <select class="field" id="pro-month"></select>
+<!-- CONSULTING SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="services-intro">
+      <div class="reveal">
+        <div class="section-label">Expert Consulting &amp; Training</div>
+        <h2 class="section-title">How We Can <span style="color:var(--green)">Serve You</span></h2>
+        <div class="divider"></div>
+        <p class="section-desc">Battle-tested across 4 continents — select your sector to explore tailored solutions in USG Compliance, AI Innovation, Servant Leadership, IT, Soft Skills, and Cyber Security.</p>
       </div>
-      <div class="card-label">Activity</div>
-      <input type="text" id="pro-activity" placeholder="e.g., Completed project, Led meeting">
-      <div class="card-label" style="margin-top:12px">Category</div>
-      <select class="field" id="pro-cat">
-        <option>Achievement</option>
-        <option>Project</option>
-        <option>Leadership</option>
-        <option>Learning</option>
-        <option>Collaboration</option>
-      </select>
-      <div class="card-label" style="margin-top:12px">Notes</div>
-      <textarea id="pro-notes" placeholder="Details and impact..."></textarea>
-      <button class="btn btn-accent btn-sm" style="margin-top:10px" onclick="logPro()">Log Activity</button>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Recent Activities</div>
-      <div id="pro-log-list"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title" style="justify-content:space-between">
-        <span>📈 Insights</span>
-        <button class="btn btn-sm" onclick="generateProReport()">Generate Report</button>
+      <div class="reveal" style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="tri-card" style="text-align:left;padding:1.5rem;">
+          <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:.6rem;"><span style="font-size:1.4rem;">🏛️</span><strong style="font-family:var(--font-ui);color:var(--white);">We Know the Donor World</strong></div>
+          <div style="font-size:.88rem;color:var(--gray);">24+ years inside USAID and the U.S. State Department.</div>
+        </div>
+        <div class="tri-card" style="text-align:left;padding:1.5rem;">
+          <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:.6rem;"><span style="font-size:1.4rem;">🤖</span><strong style="font-family:var(--font-ui);color:var(--white);">We Are Tech-Forward</strong></div>
+          <div style="font-size:.88rem;color:var(--gray);">Certified in AI Strategy, Cybersecurity, and Prompt Engineering.</div>
+        </div>
+        <div class="tri-card" style="text-align:left;padding:1.5rem;">
+          <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:.6rem;"><span style="font-size:1.4rem;">🌿</span><strong style="font-family:var(--font-ui);color:var(--white);">We Are People-First</strong></div>
+          <div style="font-size:.88rem;color:var(--gray);">Systems that work for your people, in your culture, at your scale.</div>
+        </div>
       </div>
-      <div id="pro-report"></div>
     </div>
 
-    <div class="card">
-      <div class="card-title">📊 Month Comparison</div>
-      <div class="card-label">Select Month to View:</div>
-      <select class="field" id="pro-compare-month" style="margin-bottom:12px" onchange="generateProMonthComparison()"></select>
-      <div id="pro-month-comparison"></div>
+    <!-- Tabs -->
+    <div class="reveal">
+      <div class="services-tabs">
+        <button class="svc-tab active" onclick="showSvc('ngo',this)">🌐 NGOs</button>
+        <button class="svc-tab" onclick="showSvc('private',this)">💼 Private Sector</button>
+        <button class="svc-tab" onclick="showSvc('govt',this)">🏢 Government</button>
+        <button class="svc-tab" onclick="showSvc('edu',this)">🎓 Education</button>
+        <button class="svc-tab" onclick="showSvc('exec',this)">👔 Executives</button>
+        <button class="svc-tab" onclick="showSvc('indiv',this)">🚀 Individuals</button>
+        <button class="svc-tab" onclick="showSvc('women',this)">💡 Women &amp; Youth</button>
+        <button class="svc-tab" onclick="showSvc('hum',this)">🤝 Humanitarian</button>
+      </div>
+
+      <div class="svc-panels">
+        <div id="svc-ngo" class="svc-panel active">
+          <div class="svc-header"><span class="svc-icon-big">🌐</span><div><div class="svc-title-big">For Local &amp; International NGOs</div><div class="svc-subtitle">Full-Spectrum Capacity Building</div></div></div>
+          <div class="svc-item">Donor Organization Readiness Assessment and Training</div>
+          <div class="svc-item">US Government Grant Application Support and Training</div>
+          <div class="svc-item">Pre-Award Survey Preparation</div>
+          <div class="svc-item">Grant &amp; Contract Management (Full Lifecycle)</div>
+          <div class="svc-item">Financial and Governance Systems Evaluation</div>
+          <div class="svc-item">Procurement Manual Development</div>
+          <div class="svc-item">Audit Readiness &amp; Compliance Training</div>
+          <div class="svc-item">Emergency Readiness &amp; Contingency Planning</div>
+          <div class="svc-item">Cybersecurity for Sensitive Beneficiary Data</div>
+          <div class="svc-item">Artificial Intelligence Training</div>
+          <div class="svc-item">Policy Development &amp; SOP Standardization</div>
+          <div class="svc-item">IT Skills Training for Staff</div>
+          <div class="svc-item">Google Cloud &amp; Microsoft Tools Mastery</div>
+          <div class="svc-item" style="border-color:rgba(255,107,53,0.3);color:var(--orange);">Ask us — Custom Solution</div>
+        </div>
+
+        <div id="svc-private" class="svc-panel">
+          <div class="svc-header"><span class="svc-icon-big">💼</span><div><div class="svc-title-big">For Private Sector &amp; Vendors</div><div class="svc-subtitle">USG Market Access &amp; Business Growth</div></div></div>
+          <div class="svc-item">Doing Business with the US Government</div>
+          <div class="svc-item">SAM.gov Registration &amp; Navigation</div>
+          <div class="svc-item">Compliant Proposal Writing</div>
+          <div class="svc-item">Embassy Contract Bidding Support</div>
+          <div class="svc-item">Effective Procurement &amp; Contracting Systems</div>
+          <div class="svc-item">AI Integration for Business Operations</div>
+          <div class="svc-item">Supply Chain &amp; Logistics Consulting</div>
+          <div class="svc-item">Corporate Cybersecurity Awareness Training</div>
+          <div class="svc-item">Artificial Intelligence Training</div>
+          <div class="svc-item">Policy Development &amp; SOP Standardization</div>
+          <div class="svc-item">IT Skills Training for Staff</div>
+          <div class="svc-item">Google Cloud &amp; Microsoft Tools Mastery</div>
+          <div class="svc-item">Systems Strengthening</div>
+          <div class="svc-item" style="border-color:rgba(255,107,53,0.3);color:var(--orange);">Ask us — Custom Solution</div>
+        </div>
+
+        <div id="svc-govt" class="svc-panel">
+          <div class="svc-header"><span class="svc-icon-big">🏢</span><div><div class="svc-title-big">For Government Agencies</div><div class="svc-subtitle">Public Sector Strengthening</div></div></div>
+          <div class="svc-item">Procurement System Strengthening</div>
+          <div class="svc-item">Crisis Procurement Management</div>
+          <div class="svc-item">Policy Development &amp; SOP Standardization</div>
+          <div class="svc-item">Economic Dialogue Facilitation</div>
+          <div class="svc-item">Capacity Building for Public Officials</div>
+          <div class="svc-item">Artificial Intelligence Training</div>
+          <div class="svc-item" style="border-color:rgba(255,107,53,0.3);color:var(--orange);">Ask us — Custom Solution</div>
+        </div>
+
+        <div id="svc-edu" class="svc-panel">
+          <div class="svc-header"><span class="svc-icon-big">🎓</span><div><div class="svc-title-big">For Educational Institutions</div><div class="svc-subtitle">Digital Transformation in Education</div></div></div>
+          <div class="svc-item">AI in Education: Curriculum Development</div>
+          <div class="svc-item">Student Leadership &amp; Mentorship Programs</div>
+          <div class="svc-item">IT Skills Training for Youth</div>
+          <div class="svc-item">Cybersecurity Awareness for Schools</div>
+          <div class="svc-item">Google Cloud &amp; Microsoft Tools Mastery</div>
+          <div class="svc-item">Digital Transformation Strategy</div>
+          <div class="svc-item">Systems Strengthening</div>
+          <div class="svc-item">Artificial Intelligence Training</div>
+          <div class="svc-item" style="border-color:rgba(255,107,53,0.3);color:var(--orange);">Ask us — Custom Solution</div>
+        </div>
+
+        <div id="svc-exec" class="svc-panel">
+          <div class="svc-header"><span class="svc-icon-big">👔</span><div><div class="svc-title-big">For Corporate Leadership &amp; Executives</div><div class="svc-subtitle">Board-Level Strategy &amp; Governance</div></div></div>
+          <div class="svc-item">Executive AI Strategy &amp; Governance</div>
+          <div class="svc-item">AI Acceptable Use Policy Development</div>
+          <div class="svc-item">Servant Leadership Training</div>
+          <div class="svc-item">Conflict Resolution &amp; Team Building</div>
+          <div class="svc-item">Organizational Manual Development</div>
+          <div class="svc-item">Change Management Consulting</div>
+          <div class="svc-item">Board-Level AI Risk Mitigation</div>
+          <div class="svc-item">Artificial Intelligence Training</div>
+          <div class="svc-item">Procurement System Strengthening</div>
+          <div class="svc-item" style="border-color:rgba(255,107,53,0.3);color:var(--orange);">Ask us — Custom Solution</div>
+        </div>
+
+        <div id="svc-indiv" class="svc-panel">
+          <div class="svc-header"><span class="svc-icon-big">🚀</span><div><div class="svc-title-big">For Individual Professionals</div><div class="svc-subtitle">Career Acceleration &amp; Skill Mastery</div></div></div>
+          <div class="svc-item">PMP® Certification Prep Course</div>
+          <div class="svc-item">Career Coaching &amp; Mentorship</div>
+          <div class="svc-item">AI Prompt Engineering Mastery</div>
+          <div class="svc-item">Personal Productivity with GenAI</div>
+          <div class="svc-item">Essential Marketing Skills</div>
+          <div class="svc-item">Soft Skills Development</div>
+          <div class="svc-item">Publishing Services &amp; Ghostwriting</div>
+          <div class="svc-item" style="border-color:rgba(255,107,53,0.3);color:var(--orange);">Ask us — Custom Solution</div>
+        </div>
+
+        <div id="svc-women" class="svc-panel">
+          <div class="svc-header"><span class="svc-icon-big">💡</span><div><div class="svc-title-big">For Women Entrepreneurs &amp; Youth Innovators</div><div class="svc-subtitle">Economic Inclusion &amp; Innovation</div></div></div>
+          <div class="svc-item">Deal-Making Opportunities Platform</div>
+          <div class="svc-item">Youth Innovation &amp; Economic Inclusion</div>
+          <div class="svc-item">Procurement System Strengthening</div>
+          <div class="svc-item">AI Prompt Engineering Mastery</div>
+          <div class="svc-item">Personal Productivity with GenAI</div>
+          <div class="svc-item">Essential Marketing Skills</div>
+          <div class="svc-item">Soft Skills Development</div>
+          <div class="svc-item" style="border-color:rgba(255,107,53,0.3);color:var(--orange);">Ask us — Custom Solution</div>
+        </div>
+
+        <div id="svc-hum" class="svc-panel">
+          <div class="svc-header"><span class="svc-icon-big">🤝</span><div><div class="svc-title-big">For Humanitarian &amp; Development Sector</div><div class="svc-subtitle">Crisis-Ready Leadership &amp; Systems</div></div></div>
+          <div class="svc-item">IDP &amp; Vulnerable Communities Outreach</div>
+          <div class="svc-item">Crisis Environment Leadership Training</div>
+          <div class="svc-item">Multicultural Team Management</div>
+          <div class="svc-item">Emergency Procurement Systems</div>
+          <div class="svc-item">Post-Conflict Capacity Building</div>
+          <div class="svc-item">Data-Informed Development Training</div>
+          <div class="svc-item" style="border-color:rgba(255,107,53,0.3);color:var(--orange);">Ask us — Custom Solution</div>
+        </div>
+      </div>
+
+      <div style="margin-top:2rem;text-align:center;">
+        <a href="/cdn-cgi/l/email-protection#334756525e01025c5d5f5a5d5673545e525a5f1d505c5e" class="btn-primary">⚡ Let's Talk — Contact Us</a>
+      </div>
     </div>
   </div>
+</section>
 
-  <!-- SOCIAL -->
-  <div id="social" class="section">
-    <h2 class="section-title"><span>🌍</span>Social Impact & Community</h2>
-    <p class="section-desc">Track community involvement, relationships, and social contribution.</p>
-
-    <div class="card">
-      <div class="card-title">Monthly Goals</div>
-      <textarea id="social-goals" placeholder="What is your social impact goal this month?"></textarea>
-      <button class="btn btn-accent btn-sm" style="margin-top:10px" onclick="saveSocialGoals()">Save Goals</button>
+<!-- PROGRAMS -->
+<section id="programs">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Training Programs</div>
+      <h2 class="section-title">Our <span style="color:var(--green)">Programs</span></h2>
+      <div class="divider"></div>
     </div>
-
-    <div class="card">
-      <div class="card-title">Log Activity</div>
-      <div class="month-selector">
-        <span class="month-selector-label">Assign to Month:</span>
-        <select class="field" id="social-month"></select>
+    <div class="prog-grid">
+      <div class="prog-card featured reveal">
+        <div class="prog-badge">🚀 Flagship Program</div>
+        <div class="prog-title">AI Unlocked</div>
+        <p class="prog-desc">A four-week intensive bilingual (English/French) course transforming participants with zero technical background into AI-literate entrepreneurs and job-ready digital professionals. Uses only a smartphone. Proven 86% Capstone completion rate.</p>
+        <div class="week-pills">
+          <span class="week-pill">Week 1 · AI Foundations &amp; Ethics</span>
+          <span class="week-pill">Week 2 · Content Creation with AI</span>
+          <span class="week-pill">Week 3 · Entrepreneurship &amp; BMC</span>
+          <span class="week-pill">Week 4 · Capstone Launch</span>
+        </div>
+        <div style="margin-top:1.5rem;display:flex;gap:1rem;flex-wrap:wrap;">
+          <a href="https://inno4te.github.io/AiUnlocked/" target="_blank" class="btn-primary" style="font-size:.82rem;padding:.6rem 1.4rem;">AI Unlocked (Eng) ↗</a>
+          <a href="https://inno4te.github.io/Aiunlockedfr/" target="_blank" class="btn-outline" style="font-size:.82rem;padding:.6rem 1.4rem;">AI Unlocked (Fr) ↗</a>
+        </div>
       </div>
-      <div class="card-label">Activity</div>
-      <input type="text" id="soc-activity" placeholder="e.g., Volunteered at shelter">
-      <div class="card-label" style="margin-top:12px">Category</div>
-      <select class="field" id="soc-cat">
-        <option>Volunteering</option>
-        <option>Community</option>
-        <option>Mentoring</option>
-        <option>Support</option>
-        <option>Advocacy</option>
-      </select>
-      <div class="card-label" style="margin-top:12px">Notes</div>
-      <textarea id="soc-notes" placeholder="What you did and impact..."></textarea>
-      <button class="btn btn-accent btn-sm" style="margin-top:10px" onclick="logSocial()">Log Activity</button>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Recent Activities</div>
-      <div id="soc-log-list"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title" style="justify-content:space-between">
-        <span>📈 Insights</span>
-        <button class="btn btn-sm" onclick="generateSocialReport()">Generate Report</button>
+      <div class="prog-card reveal">
+        <div class="prog-badge">🎓 Training</div>
+        <div class="prog-title">Training of Trainers (ToT)</div>
+        <p class="prog-desc">Top AI Unlocked graduates become junior mentors — simultaneously launching their own Capstone venture. Includes a 2-month paid internship at $100/month. The engine of our self-reinforcing growth model.</p>
+        <div class="week-pills"><span class="week-pill">Bilingual</span><span class="week-pill">Paid Internship</span><span class="week-pill">Capstone Launch</span></div>
+        <div style="margin-top:1.5rem;display:flex;gap:1rem;flex-wrap:wrap;">
+          <a href="https://inno4te.github.io/tot/" target="_blank" class="btn-outline" style="font-size:.82rem;padding:.6rem 1.4rem;">ToT (Eng) ↗</a>
+          <a href="https://inno4te.github.io/totfr/" target="_blank" class="btn-outline" style="font-size:.82rem;padding:.6rem 1.4rem;">ToT (Fr) ↗</a>
+        </div>
       </div>
-      <div id="social-report"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">📊 Month Comparison</div>
-      <div class="card-label">Select Month to View:</div>
-      <select class="field" id="social-compare-month" style="margin-bottom:12px" onchange="generateSocialMonthComparison()"></select>
-      <div id="social-month-comparison"></div>
+      <div class="prog-card reveal">
+        <div class="prog-badge">📖 Faith &amp; Community</div>
+        <div class="prog-title">T21 Bible School</div>
+        <p class="prog-desc">Faith-based learning integrating Biblical values with community development, leadership, and life skills — grounded in our objective of Faith-Based Ethics and Community Development.</p>
+        <div style="margin-top:1.5rem;"><a href="https://team21online-gif.github.io/t21-bible-school/" target="_blank" class="btn-outline" style="font-size:.82rem;padding:.6rem 1.4rem;">T21 Bible School ↗</a></div>
+      </div>
+      <div class="prog-card reveal">
+        <div class="prog-badge">🌱 Wholeness</div>
+        <div class="prog-title">T21 Wholeness</div>
+        <p class="prog-desc">A holistic program addressing family life, personal wellbeing, social stability, and relationship enrichment — complementing our digital and entrepreneurship tracks with human flourishing.</p>
+        <div style="margin-top:1.5rem;"><a href="https://practicalcig.github.io/wholeness/" target="_blank" class="btn-outline" style="font-size:.82rem;padding:.6rem 1.4rem;">T21 Wholeness ↗</a></div>
+      </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- EXPORT MODAL -->
-<div id="export-modal" class="modal">
-  <div class="modal-content">
-    <span class="modal-close" onclick="toggleExportModal()">×</span>
-    <h2 class="modal-title">Export Data</h2>
-    <p style="color: var(--muted); margin-bottom: 16px;">Choose what to export:</p>
-    <div class="export-option"><label><input type="checkbox" id="export-all" checked> All Data (Complete History)</label></div>
-    <div class="export-option"><label><input type="checkbox" id="export-spirit"> 🧘 Spiritual Wellbeing</label></div>
-    <div class="export-option"><label><input type="checkbox" id="export-family"> 👨‍👩‍👧 Family Connections</label></div>
-    <div class="export-option"><label><input type="checkbox" id="export-finance"> 💰 Financial Health</label></div>
-    <div class="export-option"><label><input type="checkbox" id="export-physical"> 💪 Physical Health</label></div>
-    <div class="export-option"><label><input type="checkbox" id="export-edu"> 📚 Education</label></div>
-    <div class="export-option"><label><input type="checkbox" id="export-pro"> 🚀 Professional</label></div>
-    <div class="export-option"><label><input type="checkbox" id="export-social"> 🌍 Social</label></div>
-    <button class="btn btn-accent" style="width:100%; margin-top:16px; justify-content:center" onclick="exportToExcel()">📥 Export to Excel</button>
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Trusted at the Highest Levels</div>
+      <h2 class="section-title">What Leaders <span style="color:var(--green)">Say</span></h2>
+      <div class="divider"></div>
+    </div>
+    <div class="testi-scroll reveal">
+      <div class="testi-card">
+        <div class="testi-medal">🏅</div>
+        <div class="testi-quote">"Outstanding service in the Bureau of African Affairs and contribution to the improvement of management services in sub-Saharan Africa."</div>
+        <div class="testi-author">Linda Thomas-Greenfield</div>
+        <div class="testi-role">Assistant Secretary, Bureau of African Affairs</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote">"Innocent has consistently demonstrated an unwavering commitment to excellence, technical expertise, and professionalism. A valuable asset to any organization."</div>
+        <div class="testi-author">Christopher J. Lamora</div>
+        <div class="testi-role">U.S. Ambassador</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-medal">🏅</div>
+        <div class="testi-quote">"Outstanding service in retraining Port-au-Prince procurement section and for providing leadership training for our LE staff community."</div>
+        <div class="testi-author">Alexander N. Daniels</div>
+        <div class="testi-role">Acting Deputy Chief of Mission</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote">"Innocent is an embodiment of 'quiet effective leadership'... Expert Acquisition and Assistance support for diverse and complex programs totaling over $200 million."</div>
+        <div class="testi-author">Jose Tchofa</div>
+        <div class="testi-role">Global Health Security Expert</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote">"Architect of Economic Dialogue: Innocent Forteh designed the Summit on Cameroon's Economic Landscape — resulting in the historic signing of the Joint Economic Growth Working Group."</div>
+        <div class="testi-author">Philippe Accilien</div>
+        <div class="testi-role">Country Representative, USAID Cameroon</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote">"We are losing a colleague of integrity, intelligence and good humour. You are deservedly popular with your colleagues."</div>
+        <div class="testi-author">Syd Maddicott</div>
+        <div class="testi-role">British High Commissioner to Cameroon</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote">"He approaches complex challenges with clarity and strategic insight, offering practical solutions that drive results."</div>
+        <div class="testi-author">Armelle Tchato, PMP</div>
+        <div class="testi-role">Project &amp; Program Management Specialist</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote">"A talented IT and procurement specialist, skilled project manager, and accomplished author who distinguished himself through exemplary service."</div>
+        <div class="testi-author">Félixe Carole Tanga</div>
+        <div class="testi-role">Senior Business Support, World Food Programme</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote">"I learned what it means to be a leader: one who serves, cares, and leads with humility, love and trust."</div>
+        <div class="testi-author">Sara Nana Tchoupa</div>
+        <div class="testi-role">Servant Leader &amp; Content Manager</div>
+      </div>
+    </div>
   </div>
-</div>
+</section>
 
-<script>
-// ============================================================
-// STORAGE & UTILITIES
-// ============================================================
-let USER_NAME = '';
+<!-- THEORY OF CHANGE -->
+<section id="toc">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Our Approach</div>
+      <h2 class="section-title">Theory of <span style="color:var(--green)">Change</span></h2>
+      <div class="divider"></div>
+      <p class="section-desc">Four steps from reaching the most excluded to building a self-sustaining ecosystem of digital empowerment.</p>
+    </div>
+    <div class="toc-steps">
+      <div class="toc-step reveal"><div class="step-num">01</div><div class="step-content"><div class="step-title">Reach the Unreached</div><div class="step-desc">Identify and recruit the most vulnerable participants through IDP camps, universities, and community networks. Provide device and internet access grants to those who cannot participate without support.</div></div></div>
+      <div class="toc-step reveal"><div class="step-num">02</div><div class="step-content"><div class="step-title">Build Real, Applied Skills</div><div class="step-desc">Deliver the four-week AI Unlocked curriculum bilingually. Train participants in AI tools, entrepreneurship (BMC, SOSTAC), leadership, and personal development. Every participant leaves with a completed, launch-ready Capstone project.</div></div></div>
+      <div class="toc-step reveal"><div class="step-num">03</div><div class="step-content"><div class="step-title">Activate Employment &amp; Self-Employment Pathways</div><div class="step-desc">Connect graduates to formal employment. Recruit top performers into 2-month paid internships as junior mentors. During internship they complete ToT and launch their own Capstone — leaving with both a credential and a launched venture.</div></div></div>
+      <div class="toc-step reveal"><div class="step-num">04</div><div class="step-content"><div class="step-title">Scale Through a Self-Reinforcing Model</div><div class="step-desc">Graduates who become employed contribute to program sustainability. Alumni mentors reduce mentorship costs. Capstone showcases attract new cohorts and institutional partners. The program becomes progressively more self-financing.</div></div></div>
+    </div>
+  </div>
+</section>
 
-function getStorageKey(key) {
-  return `wholeness_${USER_NAME}_${key}`;
-}
+<!-- FUNDING -->
+<section id="funding">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">2026–2027 Expansion</div>
+      <h2 class="section-title">Funding <span style="color:var(--green)">Request</span></h2>
+      <div class="divider"></div>
+      <p class="section-desc">We are seeking funding to expand our programs to communities that struggle most — targeting 1,000 participants per year across all 10 regions of Cameroon.</p>
+    </div>
+    <div class="funding-hero reveal" style="margin-top:2.5rem;">
+      <div class="section-label" style="margin:0 0 .5rem">Total 2-Year Request</div>
+      <div class="funding-amount">$248,000</div>
+      <p style="color:var(--gray);font-size:1rem;">~$124 per participant · Fully subsidized · 2,000 youth over 2 years</p>
+      <p style="color:var(--gray);font-size:.9rem;margin-top:.5rem;">Covering all 10 regions of Cameroon · 100 participants per region per year</p>
+    </div>
+    <div class="budget-grid reveal">
+      <div class="budget-item"><div class="budget-label">Core Staff – 15 FTE</div><div class="budget-val">$108,000</div><div class="budget-note">$300/month × 12 months × 2 years</div></div>
+      <div class="budget-item"><div class="budget-label">Graduate Intern Stipends (ToT)</div><div class="budget-val">$100,000</div><div class="budget-note">125 interns × $100/mo × 2 months × 2 cohorts/year</div></div>
+      <div class="budget-item"><div class="budget-label">Student Access Grants</div><div class="budget-val">$10,000</div><div class="budget-note">Devices &amp; data for IDP/most underserved</div></div>
+      <div class="budget-item"><div class="budget-label">Program Operations</div><div class="budget-val">$30,000</div><div class="budget-note">AI tools, platforms, M&amp;E, regional outreach</div></div>
+    </div>
+    <div style="margin-top:3rem;" class="reveal">
+      <div class="section-label" style="margin-bottom:1rem;">Key Success Metrics (2-Year Target)</div>
+      <div class="metrics-grid">
+        <div class="metric-card"><div class="metric-val">2,000</div><div class="metric-label">Total Participants</div></div>
+        <div class="metric-card"><div class="metric-val">&gt;80%</div><div class="metric-label">Capstone Completion</div></div>
+        <div class="metric-card"><div class="metric-val">40%</div><div class="metric-label">Employed/Launched within 6mo</div></div>
+        <div class="metric-card"><div class="metric-val">10</div><div class="metric-label">Regions Served</div></div>
+        <div class="metric-card"><div class="metric-val">&gt;30%</div><div class="metric-label">IDP Participants</div></div>
+        <div class="metric-card"><div class="metric-val">200+</div><div class="metric-label">Alumni Mentors</div></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-function set(key, value) {
-  try {
-    localStorage.setItem(getStorageKey(key), JSON.stringify(value));
-  } catch(e) {
-    console.error('Storage error:', e);
+<!-- BOARD -->
+<section id="board">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Leadership</div>
+      <h2 class="section-title">Our <span style="color:var(--green)">Board</span></h2>
+      <div class="divider"></div>
+    </div>
+    <div class="board-grid">
+      <div class="board-card president reveal"><div class="board-avatar">IF</div><div class="board-name">Innocent Forteh</div><div class="board-title">President</div></div>
+      <div class="board-card reveal"><div class="board-avatar">LF</div><div class="board-name">Linda Forteh</div><div class="board-title">Vice President</div></div>
+      <div class="board-card reveal"><div class="board-avatar">DJ</div><div class="board-name">Deron Jay Seh</div><div class="board-title">Secretary General</div></div>
+      <div class="board-card reveal"><div class="board-avatar">LC</div><div class="board-name">Lukong Chrysantus</div><div class="board-title">Vice Secretary General</div></div>
+      <div class="board-card reveal"><div class="board-avatar">EP</div><div class="board-name">Elisiane Pokam</div><div class="board-title">Treasurer</div></div>
+      <div class="board-card reveal"><div class="board-avatar">MN</div><div class="board-name">Marie Nicole Ngah</div><div class="board-title">Financial Secretary</div></div>
+      <div class="board-card reveal"><div class="board-avatar">FT</div><div class="board-name">Forjong Tarcicius</div><div class="board-title">Programs Manager</div></div>
+      <div class="board-card reveal"><div class="board-avatar">MU</div><div class="board-name">Manka Unice Ngonangie</div><div class="board-title">Adviser</div></div>
+      <div class="board-card reveal"><div class="board-avatar">DH</div><div class="board-name">Doumba Hawa Isabelle</div><div class="board-title">Adviser</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- USEFUL LINKS -->
+<section id="links">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Resources</div>
+      <h2 class="section-title">Useful <span style="color:var(--green)">Links</span></h2>
+      <div class="divider"></div>
+      <p class="section-desc">Explore all our programs, tools, and resources.</p>
+    </div>
+    <div class="links-grid">
+      <a href="https://team21online-gif.github.io/t21-bible-school/" target="_blank" class="link-card reveal"><div class="link-icon">📖</div><div class="link-info"><div class="link-name">T21 Bible School</div><div class="link-type">Faith · Community</div></div><div class="link-arrow">→</div></a>
+      <a href="https://inno4te.github.io/tot/" target="_blank" class="link-card reveal"><div class="link-icon">🎓</div><div class="link-info"><div class="link-name">TOT (Training of Trainers)</div><div class="link-type">English · Training</div></div><div class="link-arrow">→</div></a>
+      <a href="https://inno4te.github.io/totfr/" target="_blank" class="link-card reveal"><div class="link-icon">🎓</div><div class="link-info"><div class="link-name">TOT (French Website)</div><div class="link-type">Français · Formation</div></div><div class="link-arrow">→</div></a>
+      <a href="https://inno4te.github.io/AiUnlocked/" target="_blank" class="link-card reveal"><div class="link-icon">🤖</div><div class="link-info"><div class="link-name">AI Unlocked (English)</div><div class="link-type">AI Training · English</div></div><div class="link-arrow">→</div></a>
+      <a href="https://inno4te.github.io/Aiunlockedfr/" target="_blank" class="link-card reveal"><div class="link-icon">🤖</div><div class="link-info"><div class="link-name">AI Unlocked (French)</div><div class="link-type">Formation IA · Français</div></div><div class="link-arrow">→</div></a>
+      <a href="https://inno4te.github.io/workinprogress/" target="_blank" class="link-card reveal"><div class="link-icon">👤</div><div class="link-info"><div class="link-name">About Innocent Forteh</div><div class="link-type">President · Profile</div></div><div class="link-arrow">→</div></a>
+      <a href="https://inno4te.github.io/team21-consulting/" target="_blank" class="link-card reveal"><div class="link-icon">💼</div><div class="link-info"><div class="link-name">Team21 Consulting</div><div class="link-type">Enterprise · Advisory</div></div><div class="link-arrow">→</div></a>
+      <a href="https://inno4te.github.io/sltest/" target="_blank" class="link-card reveal"><div class="link-icon">📊</div><div class="link-info"><div class="link-name">Servant Leadership Test</div><div class="link-type">Assessment · Leadership</div></div><div class="link-arrow">→</div></a>
+      <a href="https://inno4te.github.io/Team21-MaDskillz/" target="_blank" class="link-card reveal"><div class="link-icon">⚡</div><div class="link-info"><div class="link-name">MaDskillz</div><div class="link-type">Skills Development</div></div><div class="link-arrow">→</div></a>
+      <a href="https://inno4te.github.io/10th/" target="_blank" class="link-card reveal"><div class="link-icon">🎉</div><div class="link-info"><div class="link-name">T21 10th Anniversary</div><div class="link-type">Milestone · Celebration</div></div><div class="link-arrow">→</div></a>
+      <a href="https://inno4te.github.io/Team21_PMP/" target="_blank" class="link-card reveal"><div class="link-icon">📝</div><div class="link-info"><div class="link-name">T21 PMP Simulation Test</div><div class="link-type">Certification · Practice</div></div><div class="link-arrow">→</div></a>
+      <a href="https://inno4te.github.io/Team21Ai-Build/" target="_blank" class="link-card reveal"><div class="link-icon">🏗️</div><div class="link-info"><div class="link-name">Team21 AI Build</div><div class="link-type">AI · Innovation</div></div><div class="link-arrow">→</div></a>
+      <a href="https://practicalcig.github.io/wholeness/" target="_blank" class="link-card reveal"><div class="link-icon">🌱</div><div class="link-info"><div class="link-name">T21 Wholeness</div><div class="link-type">Family · Wellbeing</div></div><div class="link-arrow">→</div></a>
+      <a href="https://github.com/inno4te/AiUnlocked" target="_blank" class="link-card reveal"><div class="link-icon">💻</div><div class="link-info"><div class="link-name">AI Unlocked GitHub (Eng)</div><div class="link-type">Open Source · English</div></div><div class="link-arrow">→</div></a>
+      <a href="https://github.com/inno4te/Aiunlockedfr" target="_blank" class="link-card reveal"><div class="link-icon">💻</div><div class="link-info"><div class="link-name">AI Unlocked GitHub (Fr)</div><div class="link-type">Open Source · Français</div></div><div class="link-arrow">→</div></a>
+      <a href="https://github.com/inno4te/totfr" target="_blank" class="link-card reveal"><div class="link-icon">💻</div><div class="link-info"><div class="link-name">TOT French GitHub</div><div class="link-type">Open Source · Formation</div></div><div class="link-arrow">→</div></a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="reveal">
+        <div class="section-label">Reach Us</div>
+        <h2 class="section-title">Get In <span style="color:var(--green)">Touch</span></h2>
+        <div class="divider"></div>
+        <p class="section-desc" style="margin-bottom:2rem;">Whether you're a potential funder, partner organization, or someone who wants to enroll — we'd love to hear from you.</p>
+        <div class="contact-methods">
+          <a href="/cdn-cgi/l/email-protection#c7b3a2a6aaf5f6a8a9abaea9a287a0aaa6aeabe9a4a8aa" class="contact-card">
+            <div class="contact-icon email">📧</div>
+            <div class="contact-info"><strong>Email Us</strong><span><span class="__cf_email__" data-cfemail="cdb9a8aca0fffca2a3a1a4a3a88daaa0aca4a1e3aea2a0">[email&#160;protected]</span></span></div>
+          </a>
+          <a href="https://wa.me/237674917169" target="_blank" class="contact-card">
+            <div class="contact-icon wa">💬</div>
+            <div class="contact-info"><strong>WhatsApp</strong><span>+237 674 917 169</span></div>
+          </a>
+          <a href="tel:+237694294406" class="contact-card">
+            <div class="contact-icon phone">📱</div>
+            <div class="contact-info"><strong>Phone (Consulting)</strong><span>+237 694 294 406</span></div>
+          </a>
+        </div>
+        <div style="margin-top:2rem;padding:1.5rem;background:rgba(0,255,127,0.05);border:1px solid rgba(0,255,127,0.1);border-radius:12px;">
+          <p style="color:var(--gray);font-size:.9rem;line-height:1.7;"><strong style="color:var(--white);">For Funders:</strong> We are seeking $248,000 over 2026–2027 to train 2,000 vulnerable Cameroonian youth. Contact us to receive our full grant application, impact report, and program documentation.</p>
+        </div>
+      </div>
+      <div class="map-placeholder reveal">
+        <div class="map-pin">📍</div>
+        <div class="map-city">Yaounde</div>
+        <div class="map-country">Cameroon &amp; Global · 15+ Countries</div>
+        <p style="color:var(--gray);font-size:.88rem;margin-top:1.5rem;line-height:1.7;">Serving all 10 regions of Cameroon, with a primary base in Yaounde. Programs delivered online via Telegram — accessible across the country with only a smartphone.</p>
+        <div class="region-tags">
+          <span class="region-tag">Centre</span><span class="region-tag">Northwest</span><span class="region-tag">Southwest</span>
+          <span class="region-tag">Littoral</span><span class="region-tag">West</span><span class="region-tag">North</span>
+          <span class="region-tag">Far North</span><span class="region-tag">East</span><span class="region-tag">Adamawa</span><span class="region-tag">South</span>
+        </div>
+        <div style="margin-top:1.5rem;border-top:1px solid rgba(0,255,127,0.1);padding-top:1.5rem;">
+          <div class="section-label" style="margin-bottom:.8rem;text-align:left;">Also Find Us At</div>
+          <a href="https://inno4te.github.io/team21-consulting/" target="_blank" style="color:var(--green);font-family:var(--font-ui);font-size:.9rem;text-decoration:none;display:block;margin-bottom:.4rem;">🌐 team21consulting.com ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">PRACTICAL | TEAM21 ACADEMY</div>
+        <p class="tagline">Connecting people to resources. Bilingual AI &amp; entrepreneurship training, USG compliance consulting, and servant leadership development — across Cameroon and 15+ countries.</p>
+        <div style="margin-top:1.2rem;display:flex;gap:1rem;flex-wrap:wrap;">
+          <a href="/cdn-cgi/l/email-protection#6e1a0b0f035c5f01000207000b2e09030f0702400d0103" style="color:var(--green);font-family:var(--font-ui);font-size:.85rem;text-decoration:none;">📧 Email</a>
+          <a href="https://wa.me/237674917169" target="_blank" style="color:var(--green);font-family:var(--font-ui);font-size:.85rem;text-decoration:none;">💬 WhatsApp</a>
+        </div>
+        <div class="footer-brands-bar">
+          <span class="brand-pill">📚 Inno4te Publishing</span>
+          <span class="brand-pill">🎓 Team21 Exams</span>
+          <span class="brand-pill">💼 Team21 Consulting</span>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Programs</h4>
+        <ul>
+          <li><a href="https://inno4te.github.io/AiUnlocked/" target="_blank">AI Unlocked (Eng)</a></li>
+          <li><a href="https://inno4te.github.io/Aiunlockedfr/" target="_blank">AI Unlocked (Fr)</a></li>
+          <li><a href="https://inno4te.github.io/tot/" target="_blank">Training of Trainers</a></li>
+          <li><a href="https://team21online-gif.github.io/t21-bible-school/" target="_blank">T21 Bible School</a></li>
+          <li><a href="https://practicalcig.github.io/wholeness/" target="_blank">T21 Wholeness</a></li>
+          <li><a href="https://inno4te.github.io/Team21_PMP/" target="_blank">PMP Simulation</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#services">NGO Capacity Building</a></li>
+          <li><a href="#services">USG Compliance</a></li>
+          <li><a href="#services">AI Training &amp; Strategy</a></li>
+          <li><a href="#services">Servant Leadership</a></li>
+          <li><a href="#services">Cybersecurity</a></li>
+          <li><a href="#services">PMP® Prep</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#vision">Vision &amp; Mission</a></li>
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#principal">Our Principal</a></li>
+          <li><a href="#board">Our Board</a></li>
+          <li><a href="#funding">2026–2027 Funding</a></li>
+          <li><a href="https://inno4te.github.io/team21-consulting/" target="_blank">Team21 Consulting</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>Practical (aka Team21 Academy)</span> © 2026 · All Rights Reserved · Yaounde, Cameroon
+    </div>
+  </div>
+</footer>
+
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* ─── TRANSLATION — Proper Google Translate Widget approach ─── */
+var currentLang = 'en';
+
+function doTranslate(lang) {
+  // Mark active button
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  event && event.target && event.target.classList.add('active');
+
+  if (lang === 'en') {
+    // Reset: remove cookie and reload
+    eraseCookie('googtrans');
+    currentLang = 'en';
+    location.reload();
+    return;
   }
-}
 
-function get(key, defaultVal) {
-  try {
-    const val = localStorage.getItem(getStorageKey(key));
-    return val ? JSON.parse(val) : defaultVal;
-  } catch(e) {
-    return defaultVal;
-  }
-}
-
-function push(key, value) {
-  const arr = get(key, []);
-  arr.push(value);
-  set(key, arr);
-}
-
-function getAllUserData() {
-  const allData = {};
-  const keys = ['spirit.log', 'spirit.goals', 'family.log', 'family.goals', 'finance.log', 'finance.goals',
-                'physical.log', 'physical.goals', 'edu.log', 'edu.goals', 'pro.log', 'pro.goals', 'social.log', 'social.goals'];
-  keys.forEach(k => {
-    const fullKey = getStorageKey(k);
-    const val = localStorage.getItem(fullKey);
-    if(val) allData[k] = JSON.parse(val);
-  });
-  return allData;
-}
-
-// ============================================================
-// MONTH UTILITIES
-// ============================================================
-function generateMonthOptions() {
-  const months = [];
-  // Start from April 2026, go through December 2028
-  const startDate = new Date(2026, 3, 1); // April 2026 (month 3 = April)
-  const endDate = new Date(2028, 11, 31); // December 2028
-  
-  let current = new Date(startDate);
-  while(current <= endDate) {
-    const year = current.getFullYear();
-    const month = current.toLocaleDateString('en-US', { month: 'long' });
-    const key = `${year}-${String(current.getMonth() + 1).padStart(2, '0')}`;
-    months.push({ label: `${month} ${year}`, key, date: new Date(year, current.getMonth(), 1) });
-    current.setMonth(current.getMonth() + 1);
-  }
-  
-  return months;
-}
-
-function getDateFromMonth(monthKey) {
-  if(!monthKey) return new Date();
-  const [year, month] = monthKey.split('-').map(Number);
-  return new Date(year, month - 1, 1);
-}
-
-function getMonthData(logArray, monthKey) {
-  const [year, month] = monthKey.split('-').map(Number);
-  return logArray.filter(e => {
-    const d = new Date(e.date);
-    return d.getFullYear() === year && d.getMonth() === month - 1;
-  });
-}
-
-function populateMonthSelectors() {
-  const months = generateMonthOptions();
-  const selectors = ['spirit-month', 'family-month', 'finance-month', 'physical-month', 'edu-month', 'pro-month', 'social-month'];
-  const today = new Date();
-  let currentMonthKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
-  
-  // If today is outside the April 2026 - December 2028 range, use the closest month
-  const availableKeys = months.map(m => m.key);
-  if(!availableKeys.includes(currentMonthKey)) {
-    // If today is before April 2026, default to April 2026
-    // If today is after December 2028, default to December 2028
-    currentMonthKey = availableKeys[0]; // Default to first available month
-  }
-  
-  selectors.forEach(id => {
-    const select = document.getElementById(id);
-    if(!select) return;
-    select.innerHTML = months.map(m => `<option value="${m.key}" ${m.key === currentMonthKey ? 'selected' : ''}>${m.label}</option>`).join('');
-  });
-}
-
-function populateMonthComparisonSelectors() {
-  const months = generateMonthOptions();
-  const selectors = ['spirit-compare-month', 'family-compare-month', 'finance-compare-month', 'physical-compare-month', 'edu-compare-month', 'pro-compare-month', 'social-compare-month'];
-  const today = new Date();
-  let currentMonthKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
-  
-  // If today is outside the April 2026 - December 2028 range, use the closest month
-  const availableKeys = months.map(m => m.key);
-  if(!availableKeys.includes(currentMonthKey)) {
-    currentMonthKey = availableKeys[0]; // Default to first available month
-  }
-  
-  selectors.forEach(id => {
-    const select = document.getElementById(id);
-    if(!select) return;
-    select.innerHTML = months.map(m => `<option value="${m.key}" ${m.key === currentMonthKey ? 'selected' : ''}>${m.label}</option>`).join('');
-  });
-}
-
-// ============================================================
-// AUTH
-// ============================================================
-function handleLogin(e) {
-  e.preventDefault();
-  const username = document.getElementById('username').value.trim();
-  if(!username) { toast('Please enter a username'); return; }
-  USER_NAME = username;
-  localStorage.setItem(getStorageKey('user.name'), username);
-  document.getElementById('splash').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
-  initApp();
-}
-
-function handleLogout() {
-  if(confirm('Are you sure you want to logout?')) {
-    USER_NAME = '';
-    document.getElementById('splash').style.display = 'flex';
-    document.getElementById('app').style.display = 'none';
-    document.getElementById('username').value = '';
-    toast('✅ Logged out. Your data is saved.');
-  }
-}
-
-// ============================================================
-// INIT
-// ============================================================
-function initApp() {
-  populateMonthSelectors();
-  populateMonthComparisonSelectors();
-  updateHeader();
-  updateDate();
-  setInterval(updateDate, 1000);
-  
-  document.getElementById('spirit-goals').value = get('spirit.goals', '');
-  document.getElementById('family-goals').value = get('family.goals', '');
-  document.getElementById('finance-goals').value = get('finance.goals', '');
-  document.getElementById('physical-goals').value = get('physical.goals', '');
-  document.getElementById('edu-goals').value = get('edu.goals', '');
-  document.getElementById('pro-goals').value = get('pro.goals', '');
-  document.getElementById('social-goals').value = get('social.goals', '');
-  
-  renderSpiritLog();
-  renderFamilyLog();
-  renderFinanceLog();
-  renderPhysicalLog();
-  renderEduLog();
-  renderProLog();
-  renderSocLog();
-}
-
-function updateHeader() {
-  const name = USER_NAME || get('user.name', 'Guest');
-  document.getElementById('header-user').textContent = `👤 ${name}`;
-}
-
-function updateDate() {
-  const now = new Date();
-  const opts = { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-  document.getElementById('header-date').textContent = now.toLocaleDateString('en-US', opts);
-}
-
-function switchTab(tab) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(tab).classList.add('active');
-  event.target.closest('.nav-btn').classList.add('active');
-}
-
-function toast(msg) {
-  const el = document.createElement('div');
-  el.className = 'toast';
-  el.textContent = msg;
-  document.body.appendChild(el);
-  setTimeout(() => el.remove(), 2500);
-}
-
-function toggleExportModal() {
-  document.getElementById('export-modal').classList.toggle('active');
-}
-
-// ============================================================
-// ANALYSIS
-// ============================================================
-function analyzeData(logArray) {
-  if(!logArray || logArray.length === 0) {
-    return { count: 0, thisMonth: 0, thisWeek: 0 };
+  currentLang = lang;
+  // Set the googtrans cookie (required by Google Translate widget)
+  var hostname = location.hostname;
+  var val = '/en/' + lang;
+  // Set for current domain and root
+  document.cookie = 'googtrans=' + val + '; path=/; domain=' + hostname;
+  document.cookie = 'googtrans=' + val + '; path=/';
+  // Also try .domain
+  if (hostname.indexOf('.') !== -1) {
+    document.cookie = 'googtrans=' + val + '; path=/; domain=.' + hostname;
   }
 
-  const count = logArray.length;
-  const today = new Date();
-  const thisMonth = logArray.filter(e => {
-    const d = new Date(e.date);
-    return d.getMonth() === today.getMonth() && d.getFullYear() === today.getFullYear();
-  });
-  const thisWeek = logArray.filter(e => {
-    const d = new Date(e.date);
-    const diff = (today - d) / (1000*60*60*24);
-    return diff <= 7;
-  });
-
-  return { count, thisMonth: thisMonth.length, thisWeek: thisWeek.length };
-}
-
-// ============================================================
-// SPIRIT
-// ============================================================
-function saveSpiritGoals() { set('spirit.goals', document.getElementById('spirit-goals').value); toast('🧘 Goals saved!'); }
-function logSpirit() {
-  const type = document.getElementById('spirit-type').value;
-  const time = parseInt(document.getElementById('spirit-time').value) || 0;
-  const notes = document.getElementById('spirit-notes').value.trim();
-  const monthKey = document.getElementById('spirit-month').value;
-  const selectedDate = getDateFromMonth(monthKey);
-  
-  if(!type) { toast('Select an activity type'); return; }
-  push('spirit.log', {type, time, notes, date: selectedDate.toISOString(), monthKey});
-  
-  document.getElementById('spirit-type').value = 'Meditation';
-  document.getElementById('spirit-time').value = '';
-  document.getElementById('spirit-notes').value = '';
-  
-  renderSpiritLog();
-  toast('🧘 Activity logged for ' + selectedDate.toLocaleDateString('en-US', {month: 'long', year: 'numeric'}));
-}
-
-function renderSpiritLog() {
-  const log = get('spirit.log', []).slice().reverse().slice(0, 15);
-  const el = document.getElementById('spirit-log-list');
-  
-  if(!log.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px">No activities logged yet.</p>'; return; }
-  el.innerHTML = log.map(e => `<div class="log-entry"><div><div style="font-weight:500">${e.type}</div><div class="log-desc">${e.time || 0} min${e.notes ? ' — ' + e.notes : ''}</div></div><div class="log-date">${new Date(e.date).toLocaleDateString()}</div></div>`).join('');
-}
-
-function generateSpiritReport() {
-  const log = get('spirit.log', []);
-  const goals = get('spirit.goals', 'None set');
-  const el = document.getElementById('spirit-report');
-  
-  const stats = analyzeData(log);
-  let totalTime = 0;
-  const typeCount = {};
-  
-  log.forEach(e => {
-    totalTime += e.time || 0;
-    typeCount[e.type] = (typeCount[e.type] || 0) + 1;
-  });
-
-  const topType = Object.keys(typeCount).sort((a,b) => typeCount[b] - typeCount[a])[0];
-  const average = stats.thisMonth > 0 ? (totalTime / stats.thisMonth).toFixed(1) : 0;
-
-  let html = '<div class="stats-grid">';
-  html += `<div class="stat-box"><div class="stat-value">${stats.count}</div><div class="stat-label">Total Sessions</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${stats.thisMonth}</div><div class="stat-label">This Month</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${stats.thisWeek}</div><div class="stat-label">This Week</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${totalTime}</div><div class="stat-label">Total Minutes</div></div>`;
-  html += '</div>';
-
-  html += '<div class="report-section">';
-  html += '<div class="report-stat"><div class="report-label">Monthly Goal</div><div class="report-value">' + (goals || 'Not set') + '</div></div>';
-  html += '<div class="report-stat"><div class="report-label">Most Common Practice</div><div class="report-value">' + (topType || 'N/A') + '</div></div>';
-  html += '<div class="report-stat"><div class="report-label">Avg. Duration (This Month)</div><div class="report-value">' + average + ' min</div></div>';
-  html += '</div>';
-
-  html += '<div class="report-insight">';
-  if(stats.thisMonth > 0) {
-    html += `✨ You\'ve completed ${stats.thisMonth} spiritual practice${stats.thisMonth !== 1 ? 's' : ''} this month, investing ${totalTime} minutes in your wellbeing.`;
-  } else {
-    html += '💡 Start logging your spiritual practices to build a habit and track your growth.';
-  }
-  html += '</div>';
-
-  el.innerHTML = html;
-}
-
-function generateSpiritMonthComparison() {
-  const log = get('spirit.log', []);
-  const monthKey = document.getElementById('spirit-compare-month').value;
-  const monthData = getMonthData(log, monthKey);
-  const el = document.getElementById('spirit-month-comparison');
-  
-  let totalTime = 0;
-  const typeCount = {};
-  
-  monthData.forEach(e => {
-    totalTime += e.time || 0;
-    typeCount[e.type] = (typeCount[e.type] || 0) + 1;
-  });
-
-  const topType = Object.keys(typeCount).sort((a,b) => typeCount[b] - typeCount[a])[0];
-  const average = monthData.length > 0 ? (totalTime / monthData.length).toFixed(1) : 0;
-
-  let html = '<div class="stats-grid">';
-  html += `<div class="stat-box"><div class="stat-value">${monthData.length}</div><div class="stat-label">Sessions</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${totalTime}</div><div class="stat-label">Minutes</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${average}</div><div class="stat-label">Avg/Session</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${topType || 'N/A'}</div><div class="stat-label">Top Type</div></div>`;
-  html += '</div>';
-
-  html += '<div class="report-insight">';
-  if(monthData.length > 0) {
-    html += `✨ In this month, you completed ${monthData.length} session${monthData.length !== 1 ? 's' : ''}, investing ${totalTime} minutes. Average session: ${average} minutes.`;
-  } else {
-    html += '📭 No activities logged for this month.';
-  }
-  html += '</div>';
-
-  el.innerHTML = html;
-}
-
-// ============================================================
-// FAMILY
-// ============================================================
-function saveFamilyGoals() { set('family.goals', document.getElementById('family-goals').value); toast('👨‍👩‍👧 Goals saved!'); }
-function logFamily() {
-  const activity = document.getElementById('family-activity').value.trim();
-  const cat = document.getElementById('family-cat').value;
-  const notes = document.getElementById('family-notes').value.trim();
-  const monthKey = document.getElementById('family-month').value;
-  const selectedDate = getDateFromMonth(monthKey);
-  
-  if(!activity) { toast('Enter an activity'); return; }
-  push('family.log', {activity, cat, notes, date: selectedDate.toISOString(), monthKey});
-  
-  document.getElementById('family-activity').value = '';
-  document.getElementById('family-notes').value = '';
-  
-  renderFamilyLog();
-  toast('👨‍👩‍👧 Activity logged for ' + selectedDate.toLocaleDateString('en-US', {month: 'long', year: 'numeric'}));
-}
-
-function renderFamilyLog() {
-  const log = get('family.log', []).slice().reverse().slice(0, 15);
-  const el = document.getElementById('family-log-list');
-  
-  if(!log.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px">No activities logged yet.</p>'; return; }
-  el.innerHTML = log.map(e => `<div class="log-entry"><div><div style="font-weight:500">${e.activity}</div><div class="log-desc">${e.cat}${e.notes ? ' — ' + e.notes : ''}</div></div><div class="log-date">${new Date(e.date).toLocaleDateString()}</div></div>`).join('');
-}
-
-function generateFamilyReport() {
-  const log = get('family.log', []);
-  const goals = get('family.goals', 'None set');
-  const el = document.getElementById('family-report');
-  
-  const stats = analyzeData(log);
-  const catCount = {};
-  
-  log.forEach(e => {
-    catCount[e.cat] = (catCount[e.cat] || 0) + 1;
-  });
-
-  const topCat = Object.keys(catCount).sort((a,b) => catCount[b] - catCount[a])[0];
-
-  let html = '<div class="stats-grid">';
-  html += `<div class="stat-box"><div class="stat-value">${stats.count}</div><div class="stat-label">Total Activities</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${stats.thisMonth}</div><div class="stat-label">This Month</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${stats.thisWeek}</div><div class="stat-label">This Week</div></div>`;
-  html += '</div>';
-
-  html += '<div class="report-section">';
-  html += '<div class="report-stat"><div class="report-label">Monthly Goal</div><div class="report-value">' + (goals || 'Not set') + '</div></div>';
-  html += '<div class="report-stat"><div class="report-label">Primary Focus</div><div class="report-value">' + (topCat || 'N/A') + '</div></div>';
-  html += '</div>';
-
-  html += '<div class="report-insight">';
-  if(stats.thisMonth > 0) {
-    html += `💛 You've prioritized family ${stats.thisMonth} time${stats.thisMonth !== 1 ? 's' : ''} this month. Keep building these meaningful connections.`;
-  } else {
-    html += '💡 Log family activities to strengthen bonds and track your commitment to loved ones.';
-  }
-  html += '</div>';
-
-  el.innerHTML = html;
-}
-
-function generateFamilyMonthComparison() {
-  const log = get('family.log', []);
-  const monthKey = document.getElementById('family-compare-month').value;
-  const monthData = getMonthData(log, monthKey);
-  const el = document.getElementById('family-month-comparison');
-  
-  const catCount = {};
-  monthData.forEach(e => {
-    catCount[e.cat] = (catCount[e.cat] || 0) + 1;
-  });
-
-  const topCat = Object.keys(catCount).sort((a,b) => catCount[b] - catCount[a])[0];
-
-  let html = '<div class="stats-grid">';
-  html += `<div class="stat-box"><div class="stat-value">${monthData.length}</div><div class="stat-label">Activities</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${topCat || 'N/A'}</div><div class="stat-label">Top Type</div></div>`;
-  html += '</div>';
-
-  html += '<div class="report-insight">';
-  if(monthData.length > 0) {
-    html += `💛 You logged ${monthData.length} family connection${monthData.length !== 1 ? 's' : ''} in this month. Focus: ${topCat || 'N/A'}.`;
-  } else {
-    html += '📭 No family activities logged for this month.';
-  }
-  html += '</div>';
-
-  el.innerHTML = html;
-}
-
-// ============================================================
-// FINANCE
-// ============================================================
-function saveFinanceGoals() { set('finance.goals', document.getElementById('finance-goals').value); toast('💰 Goals saved!'); }
-function logFinance() {
-  const desc = document.getElementById('fin-desc').value.trim();
-  const amount = parseFloat(document.getElementById('fin-amount').value) || 0;
-  const type = document.getElementById('fin-type').value;
-  const cat = document.getElementById('fin-cat').value;
-  const monthKey = document.getElementById('finance-month').value;
-  const selectedDate = getDateFromMonth(monthKey);
-  
-  if(!desc || amount === 0) { toast('Enter description and amount'); return; }
-  push('finance.log', {desc, amount, type, cat, date: selectedDate.toISOString(), monthKey});
-  
-  document.getElementById('fin-desc').value = '';
-  document.getElementById('fin-amount').value = '';
-  
-  renderFinanceLog();
-  toast('💰 Transaction logged for ' + selectedDate.toLocaleDateString('en-US', {month: 'long', year: 'numeric'}));
-}
-
-function renderFinanceLog() {
-  const log = get('finance.log', []).slice().reverse().slice(0, 15);
-  const el = document.getElementById('finance-log-list');
-  
-  if(!log.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px">No transactions logged yet.</p>'; return; }
-  el.innerHTML = log.map(e => `<div class="log-entry"><div><div style="font-weight:500">${e.desc}</div><div class="log-desc">${e.type} • ${e.cat}</div></div><div class="log-date">${new Date(e.date).toLocaleDateString()}</div></div>`).join('');
-}
-
-function generateFinanceReport() {
-  const log = get('finance.log', []);
-  const goals = get('finance.goals', 'None set');
-  const el = document.getElementById('finance-report');
-  
-  const stats = analyzeData(log);
-  let totalIncome = 0, totalExpense = 0, totalSaving = 0;
-  
-  log.forEach(e => {
-    if(e.type === 'Income') totalIncome += e.amount;
-    else if(e.type === 'Expense') totalExpense += e.amount;
-    else if(e.type === 'Saving') totalSaving += e.amount;
-  });
-
-  const balance = totalIncome - totalExpense;
-  const savingsRate = totalIncome > 0 ? ((totalSaving / totalIncome) * 100).toFixed(1) : 0;
-
-  let html = '<div class="stats-grid">';
-  html += `<div class="stat-box"><div class="stat-value">${totalIncome.toFixed(0)}</div><div class="stat-label">Total Income</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${totalExpense.toFixed(0)}</div><div class="stat-label">Total Expense</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${totalSaving.toFixed(0)}</div><div class="stat-label">Total Saved</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${balance.toFixed(0)}</div><div class="stat-label">Net Balance</div></div>`;
-  html += '</div>';
-
-  html += '<div class="report-section">';
-  html += '<div class="report-stat"><div class="report-label">Monthly Goal</div><div class="report-value">' + (goals || 'Not set') + '</div></div>';
-  html += '<div class="report-stat"><div class="report-label">Savings Rate</div><div class="report-value">' + savingsRate + '%</div></div>';
-  html += '</div>';
-
-  html += '<div class="report-insight">';
-  if(stats.count > 0) {
-    html += `📊 You've tracked ${stats.count} transaction${stats.count !== 1 ? 's' : ''}. Income: ${totalIncome.toFixed(0)} | Expenses: ${totalExpense.toFixed(0)} | Net: ${balance.toFixed(0)}`;
-  } else {
-    html += '💡 Start logging transactions to monitor your financial health.';
-  }
-  html += '</div>';
-
-  el.innerHTML = html;
-}
-
-function generateFinanceMonthComparison() {
-  const log = get('finance.log', []);
-  const monthKey = document.getElementById('finance-compare-month').value;
-  const monthData = getMonthData(log, monthKey);
-  const el = document.getElementById('finance-month-comparison');
-  
-  let monthIncome = 0, monthExpense = 0, monthSaving = 0;
-  monthData.forEach(e => {
-    if(e.type === 'Income') monthIncome += e.amount;
-    else if(e.type === 'Expense') monthExpense += e.amount;
-    else if(e.type === 'Saving') monthSaving += e.amount;
-  });
-
-  const monthBalance = monthIncome - monthExpense;
-  const monthRate = monthIncome > 0 ? ((monthSaving / monthIncome) * 100).toFixed(1) : 0;
-
-  let html = '<div class="stats-grid">';
-  html += `<div class="stat-box"><div class="stat-value">${monthIncome.toFixed(0)}</div><div class="stat-label">Income</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${monthExpense.toFixed(0)}</div><div class="stat-label">Expense</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${monthBalance.toFixed(0)}</div><div class="stat-label">Balance</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${monthRate}%</div><div class="stat-label">Save Rate</div></div>`;
-  html += '</div>';
-
-  html += '<div class="report-insight">';
-  if(monthData.length > 0) {
-    html += `💰 In this month: Income ${monthIncome.toFixed(0)} | Expenses ${monthExpense.toFixed(0)} | Net ${monthBalance.toFixed(0)} | Savings Rate ${monthRate}%`;
-  } else {
-    html += '📭 No financial transactions logged for this month.';
-  }
-  html += '</div>';
-
-  el.innerHTML = html;
-}
-
-// ============================================================
-// PHYSICAL
-// ============================================================
-function savePhysicalGoals() { set('physical.goals', document.getElementById('physical-goals').value); toast('💪 Goals saved!'); }
-function logPhysical() {
-  const type = document.getElementById('phys-type').value;
-  const amount = document.getElementById('phys-amount').value.trim();
-  const notes = document.getElementById('phys-notes').value.trim();
-  const monthKey = document.getElementById('physical-month').value;
-  const selectedDate = getDateFromMonth(monthKey);
-  
-  if(!type || !amount) { toast('Enter activity type and amount'); return; }
-  push('physical.log', {type, amount, notes, date: selectedDate.toISOString(), monthKey});
-  
-  document.getElementById('phys-amount').value = '';
-  document.getElementById('phys-notes').value = '';
-  
-  renderPhysicalLog();
-  toast('💪 Activity logged for ' + selectedDate.toLocaleDateString('en-US', {month: 'long', year: 'numeric'}));
-}
-
-function renderPhysicalLog() {
-  const log = get('physical.log', []).slice().reverse().slice(0, 15);
-  const el = document.getElementById('physical-log-list');
-  
-  if(!log.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px">No activities logged yet.</p>'; return; }
-  el.innerHTML = log.map(e => `<div class="log-entry"><div><div style="font-weight:505">${e.type}</div><div class="log-desc">${e.amount}${e.notes ? ' — ' + e.notes : ''}</div></div><div class="log-date">${new Date(e.date).toLocaleDateString()}</div></div>`).join('');
-}
-
-function generatePhysicalReport() {
-  const log = get('physical.log', []);
-  const goals = get('physical.goals', 'None set');
-  const el = document.getElementById('physical-report');
-  
-  const stats = analyzeData(log);
-  const typeCount = {};
-  
-  log.forEach(e => {
-    typeCount[e.type] = (typeCount[e.type] || 0) + 1;
-  });
-
-  const topType = Object.keys(typeCount).sort((a,b) => typeCount[b] - typeCount[a])[0];
-
-  let html = '<div class="stats-grid">';
-  html += `<div class="stat-box"><div class="stat-value">${stats.count}</div><div class="stat-label">Total Logged</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${stats.thisMonth}</div><div class="stat-label">This Month</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${stats.thisWeek}</div><div class="stat-label">This Week</div></div>`;
-  html += '</div>';
-
-  html += '<div class="report-section">';
-  html += '<div class="report-stat"><div class="report-label">Monthly Goal</div><div class="report-value">' + (goals || 'Not set') + '</div></div>';
-  html += '<div class="report-stat"><div class="report-label">Primary Activity</div><div class="report-value">' + (topType || 'N/A') + '</div></div>';
-  html += '</div>';
-
-  html += '<div class="report-insight">';
-  if(stats.thisMonth > 0) {
-    html += `🏃 Great work! You've logged ${stats.thisMonth} health activity${stats.thisMonth !== 1 ? 's' : ''} this month. Keep the momentum!`;
-  } else {
-    html += '💡 Log physical activities to track your fitness and wellness journey.';
-  }
-  html += '</div>';
-
-  el.innerHTML = html;
-}
-
-function generatePhysicalMonthComparison() {
-  const log = get('physical.log', []);
-  const monthKey = document.getElementById('physical-compare-month').value;
-  const monthData = getMonthData(log, monthKey);
-  const el = document.getElementById('physical-month-comparison');
-  
-  const typeCount = {};
-  monthData.forEach(e => {
-    typeCount[e.type] = (typeCount[e.type] || 0) + 1;
-  });
-
-  const topType = Object.keys(typeCount).sort((a,b) => typeCount[b] - typeCount[a])[0];
-
-  let html = '<div class="stats-grid">';
-  html += `<div class="stat-box"><div class="stat-value">${monthData.length}</div><div class="stat-label">Activities</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${topType || 'N/A'}</div><div class="stat-label">Top Activity</div></div>`;
-  html += '</div>';
-
-  html += '<div class="report-insight">';
-  if(monthData.length > 0) {
-    html += `💪 In this month, you logged ${monthData.length} health activity${monthData.length !== 1 ? 's' : ''}. Primary: ${topType || 'N/A'}. Great dedication!`;
-  } else {
-    html += '📭 No physical activities logged for this month.';
-  }
-  html += '</div>';
-
-  el.innerHTML = html;
-}
-
-// ============================================================
-// EDUCATION
-// ============================================================
-function saveEduGoals() { set('edu.goals', document.getElementById('edu-goals').value); toast('📚 Goals saved!'); }
-function logEdu() {
-  const topic = document.getElementById('edu-topic').value.trim();
-  const time = parseInt(document.getElementById('edu-time').value) || 0;
-  const type = document.getElementById('edu-type').value;
-  const notes = document.getElementById('edu-notes').value.trim();
-  const monthKey = document.getElementById('edu-month').value;
-  const selectedDate = getDateFromMonth(monthKey);
-  
-  if(!topic) { toast('Enter what you learned'); return; }
-  push('edu.log', {topic, time, type, notes, date: selectedDate.toISOString(), monthKey});
-  
-  document.getElementById('edu-topic').value = '';
-  document.getElementById('edu-time').value = '';
-  document.getElementById('edu-notes').value = '';
-  
-  renderEduLog();
-  toast('📚 Learning logged for ' + selectedDate.toLocaleDateString('en-US', {month: 'long', year: 'numeric'}));
-}
-
-function renderEduLog() {
-  const log = get('edu.log', []).slice().reverse().slice(0, 15);
-  const el = document.getElementById('edu-log-list');
-  
-  if(!log.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px">No activities logged yet.</p>'; return; }
-  el.innerHTML = log.map(e => `<div class="log-entry"><div><div style="font-weight:500">${e.topic}</div><div class="log-desc">${e.type} • ${e.time || 0}min${e.notes ? ' — ' + e.notes : ''}</div></div><div class="log-date">${new Date(e.date).toLocaleDateString()}</div></div>`).join('');
-}
-
-function generateEduReport() {
-  const log = get('edu.log', []);
-  const goals = get('edu.goals', 'None set');
-  const el = document.getElementById('edu-report');
-  
-  const stats = analyzeData(log);
-  let totalTime = 0;
-  const typeCount = {};
-  const topics = new Set();
-  
-  log.forEach(e => {
-    totalTime += e.time || 0;
-    typeCount[e.type] = (typeCount[e.type] || 0) + 1;
-    topics.add(e.topic);
-  });
-
-  const topType = Object.keys(typeCount).sort((a,b) => typeCount[b] - typeCount[a])[0];
-  const avgSession = stats.count > 0 ? (totalTime / stats.count).toFixed(1) : 0;
-
-  let html = '<div class="stats-grid">';
-  html += `<div class="stat-box"><div class="stat-value">${stats.count}</div><div class="stat-label">Total Sessions</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${totalTime}</div><div class="stat-label">Total Hours</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${topics.size}</div><div class="stat-label">Unique Topics</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${avgSession}</div><div class="stat-label">Avg Session (min)</div></div>`;
-  html += '</div>';
-
-  html += '<div class="report-section">';
-  html += '<div class="report-stat"><div class="report-label">Monthly Goal</div><div class="report-value">' + (goals || 'Not set') + '</div></div>';
-  html += '<div class="report-stat"><div class="report-label">Preferred Method</div><div class="report-value">' + (topType || 'N/A') + '</div></div>';
-  html += '</div>';
-
-  html += '<div class="report-insight">';
-  if(stats.count > 0) {
-    html += `🎓 You're a learner! ${stats.count} session${stats.count !== 1 ? 's' : ''} across ${topics.size} topic${topics.size !== 1 ? 's' : ''}, totaling ${totalTime} minutes. Keep expanding your knowledge!`;
-  } else {
-    html += '💡 Start logging your learning journey to track your growth.';
-  }
-  html += '</div>';
-
-  el.innerHTML = html;
-}
-
-function generateEduMonthComparison() {
-  const log = get('edu.log', []);
-  const monthKey = document.getElementById('edu-compare-month').value;
-  const monthData = getMonthData(log, monthKey);
-  const el = document.getElementById('edu-month-comparison');
-  
-  let totalTime = 0;
-  const typeCount = {};
-  const topics = new Set();
-  
-  monthData.forEach(e => {
-    totalTime += e.time || 0;
-    typeCount[e.type] = (typeCount[e.type] || 0) + 1;
-    topics.add(e.topic);
-  });
-
-  const topType = Object.keys(typeCount).sort((a,b) => typeCount[b] - typeCount[a])[0];
-  const avgSession = monthData.length > 0 ? (totalTime / monthData.length).toFixed(1) : 0;
-
-  let html = '<div class="stats-grid">';
-  html += `<div class="stat-box"><div class="stat-value">${monthData.length}</div><div class="stat-label">Sessions</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${totalTime}</div><div class="stat-label">Minutes</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${topics.size}</div><div class="stat-label">Topics</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${avgSession}</div><div class="stat-label">Avg/Session</div></div>`;
-  html += '</div>';
-
-  html += '<div class="report-insight">';
-  if(monthData.length > 0) {
-    html += `📚 Learning this month: ${monthData.length} session${monthData.length !== 1 ? 's' : ''} | ${topics.size} topic${topics.size !== 1 ? 's' : ''} | ${totalTime} minutes invested. Keep learning!`;
-  } else {
-    html += '📭 No learning logged for this month.';
-  }
-  html += '</div>';
-
-  el.innerHTML = html;
-}
-
-// ============================================================
-// PROFESSIONAL
-// ============================================================
-function saveProGoals() { set('pro.goals', document.getElementById('pro-goals').value); toast('🚀 Goals saved!'); }
-function logPro() {
-  const activity = document.getElementById('pro-activity').value.trim();
-  const cat = document.getElementById('pro-cat').value;
-  const notes = document.getElementById('pro-notes').value.trim();
-  const monthKey = document.getElementById('pro-month').value;
-  const selectedDate = getDateFromMonth(monthKey);
-  
-  if(!activity) { toast('Enter an activity'); return; }
-  push('pro.log', {activity, cat, notes, date: selectedDate.toISOString(), monthKey});
-  
-  document.getElementById('pro-activity').value = '';
-  document.getElementById('pro-notes').value = '';
-  
-  renderProLog();
-  toast('🚀 Activity logged for ' + selectedDate.toLocaleDateString('en-US', {month: 'long', year: 'numeric'}));
-}
-
-function renderProLog() {
-  const log = get('pro.log', []).slice().reverse().slice(0, 15);
-  const el = document.getElementById('pro-log-list');
-  
-  if(!log.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px">No activities logged yet.</p>'; return; }
-  el.innerHTML = log.map(e => `<div class="log-entry"><div><div style="font-weight:505">${e.activity}</div><div class="log-desc">${e.cat}${e.notes ? ' — ' + e.notes : ''}</div></div><div class="log-date">${new Date(e.date).toLocaleDateString()}</div></div>`).join('');
-}
-
-function generateProReport() {
-  const log = get('pro.log', []);
-  const goals = get('pro.goals', 'None set');
-  const el = document.getElementById('pro-report');
-  
-  const stats = analyzeData(log);
-  const catCount = {};
-  
-  log.forEach(e => {
-    catCount[e.cat] = (catCount[e.cat] || 0) + 1;
-  });
-
-  const topCat = Object.keys(catCount).sort((a,b) => catCount[b] - catCount[a])[0];
-
-  let html = '<div class="stats-grid">';
-  html += `<div class="stat-box"><div class="stat-value">${stats.count}</div><div class="stat-label">Total Activities</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${stats.thisMonth}</div><div class="stat-label">This Month</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${stats.thisWeek}</div><div class="stat-label">This Week</div></div>`;
-  html += '</div>';
-
-  html += '<div class="report-section">';
-  html += '<div class="report-stat"><div class="report-label">Monthly Goal</div><div class="report-value">' + (goals || 'Not set') + '</div></div>';
-  html += '<div class="report-stat"><div class="report-label">Focus Area</div><div class="report-value">' + (topCat || 'N/A') + '</div></div>';
-  html += '</div>';
-
-  html += '<div class="report-insight">';
-  if(stats.thisMonth > 0) {
-    html += `🎯 Professional momentum: ${stats.thisMonth} activity${stats.thisMonth !== 1 ? 's' : ''} this month. You're building a strong career narrative!`;
-  } else {
-    html += '💡 Log professional activities to showcase your career growth.';
-  }
-  html += '</div>';
-
-  el.innerHTML = html;
-}
-
-function generateProMonthComparison() {
-  const log = get('pro.log', []);
-  const monthKey = document.getElementById('pro-compare-month').value;
-  const monthData = getMonthData(log, monthKey);
-  const el = document.getElementById('pro-month-comparison');
-  
-  const catCount = {};
-  monthData.forEach(e => {
-    catCount[e.cat] = (catCount[e.cat] || 0) + 1;
-  });
-
-  const topCat = Object.keys(catCount).sort((a,b) => catCount[b] - catCount[a])[0];
-
-  let html = '<div class="stats-grid">';
-  html += `<div class="stat-box"><div class="stat-value">${monthData.length}</div><div class="stat-label">Activities</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${topCat || 'N/A'}</div><div class="stat-label">Top Focus</div></div>`;
-  html += '</div>';
-
-  html += '<div class="report-insight">';
-  if(monthData.length > 0) {
-    html += `🚀 Career progress: ${monthData.length} achievement${monthData.length !== 1 ? 's' : ''} | Focus: ${topCat || 'N/A'}. You're advancing your professional goals!`;
-  } else {
-    html += '📭 No professional activities logged for this month.';
-  }
-  html += '</div>';
-
-  el.innerHTML = html;
-}
-
-// ============================================================
-// SOCIAL
-// ============================================================
-function saveSocialGoals() { set('social.goals', document.getElementById('social-goals').value); toast('🌍 Goals saved!'); }
-function logSocial() {
-  const activity = document.getElementById('soc-activity').value.trim();
-  const cat = document.getElementById('soc-cat').value;
-  const notes = document.getElementById('soc-notes').value.trim();
-  const monthKey = document.getElementById('social-month').value;
-  const selectedDate = getDateFromMonth(monthKey);
-  
-  if(!activity) { toast('Enter an activity'); return; }
-  push('social.log', {activity, cat, notes, date: selectedDate.toISOString(), monthKey});
-  
-  document.getElementById('soc-activity').value = '';
-  document.getElementById('soc-notes').value = '';
-  
-  renderSocLog();
-  toast('🌍 Activity logged for ' + selectedDate.toLocaleDateString('en-US', {month: 'long', year: 'numeric'}));
-}
-
-function renderSocLog() {
-  const log = get('social.log', []).slice().reverse().slice(0, 15);
-  const el = document.getElementById('soc-log-list');
-  
-  if(!log.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px">No activities logged yet.</p>'; return; }
-  el.innerHTML = log.map(e => `<div class="log-entry"><div><div style="font-weight:505">${e.activity}</div><div class="log-desc">${e.cat}${e.notes ? ' — ' + e.notes : ''}</div></div><div class="log-date">${new Date(e.date).toLocaleDateString()}</div></div>`).join('');
-}
-
-function generateSocialReport() {
-  const log = get('social.log', []);
-  const goals = get('social.goals', 'None set');
-  const el = document.getElementById('social-report');
-  
-  const stats = analyzeData(log);
-  const catCount = {};
-  
-  log.forEach(e => {
-    catCount[e.cat] = (catCount[e.cat] || 0) + 1;
-  });
-
-  const topCat = Object.keys(catCount).sort((a,b) => catCount[b] - catCount[a])[0];
-
-  let html = '<div class="stats-grid">';
-  html += `<div class="stat-box"><div class="stat-value">${stats.count}</div><div class="stat-label">Total Activities</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${stats.thisMonth}</div><div class="stat-label">This Month</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${stats.thisWeek}</div><div class="stat-label">This Week</div></div>`;
-  html += '</div>';
-
-  html += '<div class="report-section">';
-  html += '<div class="report-stat"><div class="report-label">Monthly Goal</div><div class="report-value">' + (goals || 'Not set') + '</div></div>';
-  html += '<div class="report-stat"><div class="report-label">Primary Impact</div><div class="report-value">' + (topCat || 'N/A') + '</div></div>';
-  html += '</div>';
-
-  html += '<div class="report-insight">';
-  if(stats.thisMonth > 0) {
-    html += `💚 Amazing community impact: ${stats.thisMonth} contribution${stats.thisMonth !== 1 ? 's' : ''} this month. You're making a difference!`;
-  } else {
-    html += '💡 Log social and community activities to track your positive impact.';
-  }
-  html += '</div>';
-
-  el.innerHTML = html;
-}
-
-function generateSocialMonthComparison() {
-  const log = get('social.log', []);
-  const monthKey = document.getElementById('social-compare-month').value;
-  const monthData = getMonthData(log, monthKey);
-  const el = document.getElementById('social-month-comparison');
-  
-  const catCount = {};
-  monthData.forEach(e => {
-    catCount[e.cat] = (catCount[e.cat] || 0) + 1;
-  });
-
-  const topCat = Object.keys(catCount).sort((a,b) => catCount[b] - catCount[a])[0];
-
-  let html = '<div class="stats-grid">';
-  html += `<div class="stat-box"><div class="stat-value">${monthData.length}</div><div class="stat-label">Activities</div></div>`;
-  html += `<div class="stat-box"><div class="stat-value">${topCat || 'N/A'}</div><div class="stat-label">Top Impact</div></div>`;
-  html += '</div>';
-
-  html += '<div class="report-insight">';
-  if(monthData.length > 0) {
-    html += `💚 Social impact this month: ${monthData.length} contribution${monthData.length !== 1 ? 's' : ''} | Focus: ${topCat || 'N/A'}. You're making the world better!`;
-  } else {
-    html += '📭 No social activities logged for this month.';
-  }
-  html += '</div>';
-
-  el.innerHTML = html;
-}
-
-// ============================================================
-// EXPORT
-// ============================================================
-function exportToExcel() {
-  const allData = getAllUserData();
-  const exportAll = document.getElementById('export-all').checked;
-  
-  let csvContent = 'WHOLENESS TRACKER - Data Export\n';
-  csvContent += `User: ${USER_NAME}\n`;
-  csvContent += `Exported: ${new Date().toLocaleString()}\n`;
-  csvContent += `© Team21 Academy | © Innocent Forteh\n\n`;
-
-  const categories = [
-    { key: 'spirit', name: 'Spiritual Wellbeing', id: 'export-spirit' },
-    { key: 'family', name: 'Family Connections', id: 'export-family' },
-    { key: 'finance', name: 'Financial Health', id: 'export-finance' },
-    { key: 'physical', name: 'Physical Health', id: 'export-physical' },
-    { key: 'edu', name: 'Education & Learning', id: 'export-edu' },
-    { key: 'pro', name: 'Professional Growth', id: 'export-pro' },
-    { key: 'social', name: 'Social Impact', id: 'export-social' }
-  ];
-
-  categories.forEach(cat => {
-    if(!exportAll && !document.getElementById(cat.id).checked) return;
-
-    const logs = get(`${cat.key}.log`, []);
-    const goals = get(`${cat.key}.goals`, '');
-
-    if(logs.length === 0 && !goals) return;
-
-    csvContent += `\n\n=== ${cat.name.toUpperCase()} ===\n`;
-    csvContent += `Goal: ${goals || 'Not set'}\n\n`;
-    
-    if(logs.length > 0) {
-      csvContent += 'Date,';
-      const firstEntry = logs[0];
-      const keys = Object.keys(firstEntry).filter(k => k !== 'date' && k !== 'monthKey');
-      csvContent += keys.join(',') + '\n';
-
-      logs.forEach(entry => {
-        csvContent += `${new Date(entry.date).toLocaleString()},`;
-        csvContent += keys.map(k => {
-          const val = entry[k];
-          return typeof val === 'string' && val.includes(',') ? `"${val}"` : val;
-        }).join(',') + '\n';
-      });
+  // Use the hidden Google Translate widget's select element
+  var tryWidget = function(attempts) {
+    var sel = document.querySelector('.goog-te-combo');
+    if (sel) {
+      sel.value = lang;
+      sel.dispatchEvent(new Event('change'));
+      return;
     }
-  });
-
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement('a');
-  const url = URL.createObjectURL(blob);
-  
-  link.setAttribute('href', url);
-  link.setAttribute('download', `wholeness_${USER_NAME}_${new Date().toISOString().split('T')[0]}.csv`);
-  link.style.visibility = 'hidden';
-  
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  
-  toast('✅ Data exported to CSV!');
-  toggleExportModal();
+    if (attempts > 0) setTimeout(function(){ tryWidget(attempts - 1); }, 300);
+    else {
+      // Final fallback: open Google Translate proxy
+      var url = 'https://translate.google.com/translate?sl=en&tl=' + lang + '&u=' + encodeURIComponent(location.href);
+      window.open(url, '_blank');
+    }
+  };
+  tryWidget(10);
 }
 
-// ============================================================
-// STARTUP
-// ============================================================
-window.addEventListener('DOMContentLoaded', () => {
-  const stored = Object.keys(localStorage).find(k => k.match(/wholeness_(.+)_user\.name/));
-  if(stored) {
-    USER_NAME = localStorage.getItem(stored);
-    document.getElementById('splash').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    initApp();
+function eraseCookie(name) {
+  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + location.hostname;
+}
+
+// Restore language from cookie on page load
+window.addEventListener('load', function() {
+  var match = document.cookie.match(/googtrans=\/en\/([^;]+)/);
+  if (match) {
+    currentLang = match[1];
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      if (b.onclick && b.onclick.toString().indexOf("'" + currentLang + "'") !== -1) {
+        b.classList.add('active');
+      }
+    });
   }
+  // Hide Google's own banner
+  var style = document.createElement('style');
+  style.innerHTML = '.goog-te-banner-frame,.goog-te-balloon-frame{display:none!important;}body{top:0!important;position:static!important;}';
+  document.head.appendChild(style);
+});
+
+/* ─── TRANSLATE BAR toggle ─── */
+var tbar = document.getElementById('translateBar');
+var tnav = document.getElementById('mainNav');
+document.getElementById('translateBtn').addEventListener('click', function(e) {
+  e.stopPropagation();
+  tbar.classList.toggle('open');
+  if (tbar.classList.contains('open')) tnav.classList.add('shifted');
+  else tnav.classList.remove('shifted');
+});
+document.getElementById('closeBar').addEventListener('click', function() {
+  tbar.classList.remove('open');
+  tnav.classList.remove('shifted');
+});
+
+/* ─── HAMBURGER ─── */
+document.getElementById('hamburger').addEventListener('click', function() {
+  document.getElementById('navLinks').classList.toggle('open');
+});
+
+/* ─── SERVICES TABS ─── */
+function showSvc(id, btn) {
+  document.querySelectorAll('.svc-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.svc-tab').forEach(function(t){ t.classList.remove('active'); });
+  var panel = document.getElementById('svc-' + id);
+  if (panel) panel.classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+/* ─── SCROLL REVEAL ─── */
+var reveals = document.querySelectorAll('.reveal');
+var io = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+reveals.forEach(function(el) { io.observe(el); });
+
+/* ─── SCROLL TOP ─── */
+var st = document.getElementById('scrollTop');
+window.addEventListener('scroll', function() {
+  st.classList.toggle('show', window.scrollY > 500);
 });
 </script>
-
 </body>
 </html>
